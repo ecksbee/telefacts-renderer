@@ -1,23 +1,39 @@
 import React from 'react';
-import Selectize from './components/selectize';
+import SelectizeBox from './components/selectizeBox';
 import './App.css';
 
 function App() {
 
-  const [selected, setSelected] = React.useState(null);
+  const [entitySelected, setEntitySelected] = React.useState(null);
+  const [rSetSelected, setRSetSelected] = React.useState(null);
 
-  const optionList = [
+  const entityOptions = [
     { value: 'chocolate', label: 'Chocolate', key: 'chocolate' },
     { value: 'strawberry', label: 'Strawberry', key: 'strawberry' },
     { value: 'vanilla', label: 'Vanilla', key: 'vanilla' }
   ]
 
-  const handleChange = (value, value2) => {
-    setSelected(value);
+  const rSetOptions = [
+    { value: 'chocolate', label: 'Chocolate', key: 'chocolate' },
+    { value: 'strawberry', label: 'Strawberry', key: 'strawberry' },
+    { value: 'vanilla', label: 'Vanilla', key: 'vanilla' }
+  ]
+
+  const handleEntityChange = (value) => {
+    setEntitySelected(value);
+  };
+  
+  const handleRSetChange = (value) => {
+    setRSetSelected(value);
   };
 
   return (
-    <Selectize onChange={handleChange} selected={selected} options={optionList} />
+    <SelectizeBox onEntityChange={handleEntityChange}
+    onRSetChange={handleRSetChange}
+    entitySelected={entitySelected}
+    entityOptions={entityOptions}
+    rSetSelected={rSetSelected}
+    rSetOptions={rSetOptions} />
   );
 }
 
