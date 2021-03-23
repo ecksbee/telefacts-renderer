@@ -13,8 +13,6 @@ function App() {
   ]
 
   const handleChange = (value, value2) => {
-    console.log(value);
-    console.log(value2);
     setSelected(value);
   };
 
