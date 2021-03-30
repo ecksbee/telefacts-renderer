@@ -7,8 +7,11 @@ function SelectizeBox(props) {
 
     return (
         <div className="selectize-box">
-            Entity: <Selectize onChange={props.onEntityChange} selected={props.entitySelected} options={props.entityOptions} />
-            Relationsip Set: <Selectize onChange={props.onRSetChange} selected={props.rSetSelected} options={props.rSetOptions} />
+            <div className="selectize-box-title">Concept Network Browser</div>
+            <div>
+                Entity: <Selectize onChange={props.onEntityChange} selected={props.entitySelected} options={props.entityOptions} />
+                Relationship Set: <Selectize onChange={props.onRSetChange} selected={props.rSetSelected} options={props.rSetOptions} />
+            </div>
         </div>
     );
 }
@@ -19,7 +22,7 @@ SelectizeBox.propTypes = {
         key: PropTypes.string
       })).isRequired,
 
-      rSetOptions: PropTypes.arrayOf(PropTypes.shape({
+    rSetOptions: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string,
         key: PropTypes.string
       })).isRequired,
@@ -29,7 +32,7 @@ SelectizeBox.propTypes = {
         key: PropTypes.string
     }),
     
-    RSetSelected: PropTypes.shape({
+    rSetSelected: PropTypes.shape({
         label: PropTypes.string,
         key: PropTypes.string
     }),
