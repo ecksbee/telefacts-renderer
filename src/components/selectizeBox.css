@@ -1,0 +1,12 @@
+.selectize-box {
+    border: 3px solid #000;
+    border-radius: 15px;
+    padding: 2% 2%;
+    font-family: 'Roboto';
+    font-size: 18px;
+    margin:20px;
+}
+
+.selectize-box-title {
+    margin-bottom: 15px;
+}

@@ -2,10 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 
+const selectizeStyles = {
+    option: (provided) => ({
+        ...provided,
+        fontSize: '16px',
+    }),
+    control: base => ({
+        ...base,
+        fontSize: '16px',
+    }),
+    menu: base => ({
+        ...base,
+        fontSize: '16px',
+    })
+};
+
 function Selectize(props) {
 
     return (
-        <Select options={props.options} onChange={props.onChange} />
+            <Select className="selectize" styles={selectizeStyles} options={props.options} onChange={props.onChange} />  
     );
 }
 
