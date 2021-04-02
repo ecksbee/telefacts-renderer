@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 const selectizeStyles = {
-    option: (provided, state) => ({
+    option: (provided) => ({
         ...provided,
         fontSize: '16px',
     }),
