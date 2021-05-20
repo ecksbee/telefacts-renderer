@@ -9,8 +9,10 @@ function SelectizeBox(props) {
         <div className="selectize-box">
             <div className="selectize-box-title">Concept Network Browser</div>
             <div>
-                Entity: <Selectize onChange={props.onEntityChange} selected={props.entitySelected} options={props.entityOptions} />
-                Relationship Set: <Selectize onChange={props.onRSetChange} selected={props.rSetSelected} options={props.rSetOptions} />
+                <label htmlFor="entity">Entity: </label><Selectize inputId="entity" onChange={props.onEntityChange} selected={props.entitySelected} options={props.entityOptions} />
+            </div>
+            <div>
+                <label htmlFor="relationshipSet">Relationship Set: </label><Selectize inputId="relationshipSet" onChange={props.onRSetChange} selected={props.rSetSelected} options={props.rSetOptions} />
             </div>
         </div>
     );

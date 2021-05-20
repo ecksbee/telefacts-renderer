@@ -20,7 +20,7 @@ const selectizeStyles = {
 function Selectize(props) {
 
     return (
-            <Select className="selectize" styles={selectizeStyles} options={props.options} onChange={props.onChange} />  
+            <Select inputId={props.inputId} className="selectize" styles={selectizeStyles} options={props.options} onChange={props.onChange} defaultValue={props.selected?.label} />  
     );
 }
 
