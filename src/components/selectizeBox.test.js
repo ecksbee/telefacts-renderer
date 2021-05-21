@@ -94,14 +94,41 @@ import './selectizeBox.css';
   });
 
   test('render the label of a selected entity', () => {
-    const testLabel = {label:'testLabel_1', key: 'testKey_1'};
+    const testArray = [
+      {label:'testLabel_1', key: 'testKey_1'},
+      {label:'testLabel_2', key: 'testKey_2'},
+      {label:'testLabel_3', key: 'testKey_3'}
+    ];
+    const testLabel = testArray[0];
 
     render(<SelectizeBox onEntityChange={_=>{}}
     onRSetChange={_=>{}}
     entitySelected={testLabel}
-    entityOptions={[]}
+    entityOptions={testArray}
     rSetSelected={null}
     rSetOptions={[]} />);
-    
-    expect(screen.getByLabelText('Entity:')).toHaveTextContent('testLabel_1');
+
+    expect(()=>screen.getByText('testLabel_1')).not.toThrow();
+    expect(()=>screen.getByText('testLabel_2')).toThrow();
+    expect(()=>screen.getByText('testLabel_3')).toThrow();
+  });
+
+  test('render the label of a selected relationship set', () => {
+    const testArray = [
+      {label:'testLabel_1', key: 'testKey_1'},
+      {label:'testLabel_2', key: 'testKey_2'},
+      {label:'testLabel_3', key: 'testKey_3'}
+    ];
+    const testLabel = testArray[0];
+
+    render(<SelectizeBox onEntityChange={_=>{}}
+    onRSetChange={_=>{}}
+    entitySelected={null}
+    entityOptions={[]}
+    rSetSelected={testLabel}
+    rSetOptions={testArray} />);
+
+    expect(()=>screen.getByText('testLabel_1')).not.toThrow();
+    expect(()=>screen.getByText('testLabel_2')).toThrow();
+    expect(()=>screen.getByText('testLabel_3')).toThrow();
   });
