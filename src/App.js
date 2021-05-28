@@ -18,14 +18,13 @@ function App() {
     setRSetSelected(value);
   };
 
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuidFromQuery = urlParams.get('uuid');
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
-    //todo
+    fetch('/projects/' + uuidFromQuery + '/renderables')
   },[]);
 
   // useEffect(() => {
