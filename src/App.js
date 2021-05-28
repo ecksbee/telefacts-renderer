@@ -55,11 +55,3 @@ function App() {
 }
 
 export default App;
-
-
-/*
-- given a project's uuid (through App's props object), do the following
-- get request to renderables catalog api to populate dropdown options
-- store response in state
-- set state for selected item to index 0 initially
-*/
