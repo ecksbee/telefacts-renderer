@@ -42,8 +42,7 @@ function App() {
           });
         });
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[entityOptions, rSetOptions]);
 
   return (
     <SelectizeBox onEntityChange={handleEntityChange}
