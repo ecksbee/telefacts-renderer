@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SelectizeBox from './components/selectizeBox';
 import './App.css';
 
@@ -17,6 +17,16 @@ function App() {
   const handleRSetChange = (value) => {
     setRSetSelected(value);
   };
+
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuidFromQuery = urlParams.get('uuid');
+    if (!uuidFromQuery) {
+      throw new Error('missing uuid');
+    }
+    //todo
+  },[]);
 
   // useEffect(() => {
   //   const urlParams = new URLSearchParams(window.location.search);
