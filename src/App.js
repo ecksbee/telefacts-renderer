@@ -26,33 +26,24 @@ function App() {
     }
     fetch('/projects/' + uuidFromQuery + '/renderables')
       .then(response => response.json())
+      .then(data => {
+        data.Subjects.forEach(subject => {
+          const value = subject.Entity.Scheme + '/' + subject.Entity.CharData;
+          entityOptions.push({
+            value,
+            label: subject.Name,
+            key: value
+          });
+        });
+        data.RelationshipSets.forEach(rSet => {
+          rSetOptions.push({
+            label: rSet.RoleURI,
+            key: rSet.RoleURI
+          });
+        });
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
-
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const uuidFromQuery = urlParams.get('uuid');
-  //   if (!uuidFromQuery) {
-  //     throw new Error('missing uuid');
-  //   }
-  //   fetch('/projects/' + uuidFromQuery + '/renderables')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       data.Subjects.forEach(subject => {
-  //         const value = subject.Entity.Scheme + '/' + subject.Entity.CharData;
-  //         entityOptions.push({
-  //           value,
-  //           label: subject.Name,
-  //           key: value
-  //         });
-  //       });
-  //       data.RelationshipSets.forEach(rSet => {
-  //         rSetOptions.push({
-  //           label: rSet.RoleURI,
-  //           key: rSet.RoleURI
-  //         });
-  //       });
-  //     });
-  // },[entityOptions, rSetOptions]);
 
   return (
     <SelectizeBox onEntityChange={handleEntityChange}
