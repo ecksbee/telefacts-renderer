@@ -25,6 +25,7 @@ function App() {
       throw new Error('missing uuid');
     }
     fetch('/projects/' + uuidFromQuery + '/renderables')
+      .then(response => response.json())
   },[]);
 
   // useEffect(() => {
