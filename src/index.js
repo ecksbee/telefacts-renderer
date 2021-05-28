@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "fontsource-roboto/latin.css";
+import 'react-app-polyfill/stable';
 
 ReactDOM.render(
   <React.StrictMode>
