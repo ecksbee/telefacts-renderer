@@ -6,9 +6,8 @@ function App() {
 
   const [entitySelected, setEntitySelected] = React.useState(null);
   const [rSetSelected, setRSetSelected] = React.useState(null);
-
-  let entityOptions = [];
-  let rSetOptions = [];
+  const [entityOptions, setEntityOptions] = React.useState([]);
+  const [rSetOptions, setRSetOptions] = React.useState([]);
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
@@ -27,20 +26,20 @@ function App() {
     fetch('/projects/' + uuidFromQuery + '/renderables')
       .then(response => response.json())
       .then(data => {
-        data.Subjects.forEach(subject => {
+        const entities = data.Subjects.map(subject => {
           const value = subject.Entity.Scheme + '/' + subject.Entity.CharData;
-          entityOptions.push({
+          return {
             value,
             label: subject.Name,
             key: value
-          });
+          }
         });
-        data.RelationshipSets.forEach(rSet => {
-          rSetOptions.push({
-            label: rSet.RoleURI,
-            key: rSet.RoleURI
-          });
-        });
+        setEntityOptions(entities)
+        const rSets = data.RelationshipSets.map(rSet => ({
+          label: rSet.RoleURI,
+          key: rSet.RoleURI
+        }));
+        setRSetOptions(rSets)
       });
   },[entityOptions, rSetOptions]);
 
