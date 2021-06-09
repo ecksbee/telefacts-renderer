@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import renderablesCatalog from './testRenderablesCatalog';
 
@@ -14,7 +14,7 @@ test('renders the app with no errors or failures', () => {
   }).not.toThrow();
 });
 
-test('renders the app with a given query string of uuid and successfully calls fetch', async () => {
+test('renders the app with a given query string of uuid and successfully calls fetch', () => {
   const testUuid = 'testUuid';
   jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((key) => {
     if (key === 'uuid') {
@@ -22,13 +22,16 @@ test('renders the app with a given query string of uuid and successfully calls f
     }
     return null;
   });
-  const waitForMe = Promise.resolve({
-    json: () => Promise.resolve(renderablesCatalog),
-  });
-  global.fetch = jest.fn(() =>
-    waitForMe
-  );
-  await act(() => render(<App />));
-  expect(fetch).toHaveBeenCalledTimes(1);
-  expect(fetch).toHaveBeenCalledWith('/projects/' + testUuid + '/renderables');
+  const waitForMe = Promise.resolve({ json: () => Promise.resolve(renderablesCatalog) })
+  const fetchMock = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => waitForMe)
+  act(
+    async () => {
+      render(<App />)
+      await waitForMe
+    }
+  )
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(fetchMock).toHaveBeenCalledWith('/projects/' + testUuid + '/renderables');
 });
