@@ -8,6 +8,8 @@ function App() {
   const [rSetSelected, setRSetSelected] = React.useState(null);
   const [entityOptions, setEntityOptions] = React.useState([]);
   const [rSetOptions, setRSetOptions] = React.useState([]);
+  const [isFetching, setIsFetching] = React.useState(false);
+  const [isFetchingDone, setIsFetchingDone] = React.useState(false);
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
@@ -30,6 +32,10 @@ function App() {
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
+    if (isFetching || isFetchingDone) {
+      return cleanup
+    }
+    setIsFetching(true)
     fetch('/projects/' + uuidFromQuery + '/renderables')
       .then(response => response.json())
       .then(data => {
@@ -42,14 +48,17 @@ function App() {
           }
         });
         setEntityOptions(entities)
+        setEntitySelected(entities[0])
         const rSets = data.RelationshipSets.map(rSet => ({
           label: rSet.RoleURI,
           key: rSet.RoleURI
         }));
         setRSetOptions(rSets)
+        setRSetSelected(rSets[0])
+        setIsFetchingDone(true)
       });
       return cleanup
-  },[entityOptions, rSetOptions]);
+  },[entityOptions, rSetOptions, isFetchingDone, isFetching]);
 
   return (
     <SelectizeBox onEntityChange={handleEntityChange}

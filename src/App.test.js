@@ -14,7 +14,7 @@ test('renders the app with no errors or failures', () => {
   }).not.toThrow();
 });
 
-test('renders the app with a given query string of uuid and successfully calls fetch', () => {
+test('renders the app with a given query string of uuid and successfully calls fetch', async () => {
   const testUuid = 'testUuid';
   jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((key) => {
     if (key === 'uuid') {
@@ -26,7 +26,7 @@ test('renders the app with a given query string of uuid and successfully calls f
   const fetchMock = jest
     .spyOn(global, 'fetch')
     .mockImplementation(() => waitForMe)
-  act(
+  await act(
     async () => {
       render(<App />)
       await waitForMe
