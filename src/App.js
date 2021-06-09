@@ -18,6 +18,13 @@ function App() {
   };
 
   useEffect(() => {
+    let unmounted = false
+    const cleanup = () => {
+      unmounted = true
+    }
+    if (unmounted) {
+      return cleanup
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const uuidFromQuery = urlParams.get('uuid');
     if (!uuidFromQuery) {
@@ -41,6 +48,7 @@ function App() {
         }));
         setRSetOptions(rSets)
       });
+      return cleanup
   },[entityOptions, rSetOptions]);
 
   return (
