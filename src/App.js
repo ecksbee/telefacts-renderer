@@ -58,16 +58,19 @@ function App() {
         setIsFetchingDone(true)
       });
       return cleanup
-  },[entityOptions, rSetOptions, isFetchingDone, isFetching]);
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, isFetching]);
 
-  return (
-    <SelectizeBox onEntityChange={handleEntityChange}
-    onRSetChange={handleRSetChange}
-    entitySelected={entitySelected}
-    entityOptions={entityOptions}
-    rSetSelected={rSetSelected}
-    rSetOptions={rSetOptions} />
-  );
+  if (entitySelected && rSetSelected) {
+    return (
+      <SelectizeBox onEntityChange={handleEntityChange}
+      onRSetChange={handleRSetChange}
+      entitySelected={entitySelected}
+      entityOptions={entityOptions}
+      rSetSelected={rSetSelected}
+      rSetOptions={rSetOptions} />
+    );
+  }
+  return null;
 }
 
 export default App;
