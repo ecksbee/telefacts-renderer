@@ -55,6 +55,6 @@ test('first item in dropdown is selected by default', async () => {
     }
   )
   expect(() => screen.getByText(renderablesCatalog.Subjects[0].Name)).not.toThrow();
-  expect(() => screen.getByText(renderablesCatalog.RelationshipSets[0].Title)).not.toThrow();
+  expect(() => screen.getByText(renderablesCatalog.RelationshipSets[0].RoleURI)).not.toThrow();
   global.fetch.mockRestore();
 });
