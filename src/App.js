@@ -49,10 +49,14 @@ function App() {
         });
         setEntityOptions(entities)
         setEntitySelected(entities[0])
-        const rSets = data.RelationshipSets.map(rSet => ({
-          label: rSet.RoleURI,
-          key: rSet.RoleURI
-        }));
+        const rSets = data.RelationshipSets.map(rSet => {
+          const value = rSet.RoleURI;
+          return {
+            value,
+            label: rSet.RoleURI,
+            key: rSet.RoleURI
+          }
+        });
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
         setIsFetchingDone(true)
