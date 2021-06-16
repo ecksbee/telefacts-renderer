@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SelectizeBox from './components/selectizeBox';
+import RViewer from './components/rViewer';
 import './App.css';
 
 function App() {
@@ -49,14 +50,11 @@ function App() {
         });
         setEntityOptions(entities)
         setEntitySelected(entities[0])
-        const rSets = data.RelationshipSets.map(rSet => {
-          const value = rSet.RoleURI;
-          return {
-            value,
-            label: rSet.RoleURI,
-            key: rSet.RoleURI
-          }
-        });
+        const rSets = data.RelationshipSets.map(rSet => ({
+          label: rSet.RoleURI,
+          key: rSet.RoleURI,
+          title: rSet.Title
+        }));
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
         setIsFetchingDone(true)
@@ -66,12 +64,15 @@ function App() {
 
   if (entitySelected && rSetSelected) {
     return (
-      <SelectizeBox onEntityChange={handleEntityChange}
+      <><SelectizeBox onEntityChange={handleEntityChange}
       onRSetChange={handleRSetChange}
       entitySelected={entitySelected}
       entityOptions={entityOptions}
       rSetSelected={rSetSelected}
       rSetOptions={rSetOptions} />
+
+      <RViewer rSetSelected={rSetSelected} />
+      </>
     );
   }
   return null;
