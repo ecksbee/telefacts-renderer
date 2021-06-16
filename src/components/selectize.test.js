@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import Selectize from './selectize';
-import './selectizeBox.css';
 
   test('clicking the entity dropdown displays list of options', async () => {
     const testArray = [
