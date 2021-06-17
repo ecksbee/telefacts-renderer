@@ -13,11 +13,15 @@ function ConceptNetworkViewer() {
     const calculationClass = (tabs===calculation)?"tab-selected":"";
 
     return (
+        <>
         <div className="tab">
             <button className={presentationClass} onClick={_=>setTabs(presentation)}>Presentation</button>
             <button className={definitionClass} onClick={_=>setTabs(definition)}>Definition</button>
             <button className={calculationClass} onClick={_=>setTabs(calculation)}>Calculation</button>
         </div>
+
+        <div className="loader"></div>
+        </>
     )
 }
 
