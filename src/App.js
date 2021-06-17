@@ -51,6 +51,7 @@ function App() {
         setEntityOptions(entities)
         setEntitySelected(entities[0])
         const rSets = data.RelationshipSets.map(rSet => ({
+          value: rSet.RoleURI,
           label: rSet.RoleURI,
           key: rSet.RoleURI,
           title: rSet.Title
