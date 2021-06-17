@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ConceptNetworkViewer from '../conceptNetworkViewer';
 import './rViewer.css';
 
 function RViewer(props) {
@@ -8,6 +9,7 @@ function RViewer(props) {
             <div className="rViewer-title">
                 {props.rSetSelected.title}
             </div>
+            <ConceptNetworkViewer />
         </div>
     );
 }
