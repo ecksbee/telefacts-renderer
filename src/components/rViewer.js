@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ConceptNetworkViewer from '../conceptNetworkViewer';
+import ConceptNetworkViewer from './conceptNetworkViewer';
 import './rViewer.css';
 
 function RViewer(props) {
