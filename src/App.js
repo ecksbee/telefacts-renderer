@@ -11,6 +11,7 @@ function App() {
   const [rSetOptions, setRSetOptions] = React.useState([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [isFetchingDone, setIsFetchingDone] = React.useState(false);
+  const [renderablesHash, setRenderablesHash] = React.useState('');
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
@@ -20,6 +21,9 @@ function App() {
     setRSetSelected(value);
   };
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuidFromQuery = urlParams.get('uuid');
+
   useEffect(() => {
     let unmounted = false
     const cleanup = () => {
@@ -28,8 +32,6 @@ function App() {
     if (unmounted) {
       return cleanup
     }
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuidFromQuery = urlParams.get('uuid');
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
@@ -59,9 +61,10 @@ function App() {
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
         setIsFetchingDone(true)
+        setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
       return cleanup
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, isFetching]);
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, isFetching, uuidFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (
@@ -72,7 +75,7 @@ function App() {
       rSetSelected={rSetSelected}
       rSetOptions={rSetOptions} />
 
-      <RViewer rSetSelected={rSetSelected} />
+      <RViewer rSetSelected={rSetSelected} uuidFromQuery={uuidFromQuery} renderablesHash={renderablesHash} />
       </>
     );
   }
