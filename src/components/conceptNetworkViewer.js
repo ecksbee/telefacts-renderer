@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
@@ -30,9 +31,14 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
             <button className={calculationClass} onClick={_=>setTabs(calculation)}>Calculation</button>
         </div>
 
-        {!isFetchingDone && <div className="loader"></div>}
+        {!isFetchingDone && <div className="loader" title="loader"></div>}
         </>
     )
 }
+
+ConceptNetworkViewer.propTypes = {
+    uuidFromQuery: PropTypes.string,
+    renderablesHash: PropTypes.string
+};
 
 export default ConceptNetworkViewer;

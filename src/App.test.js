@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import App from './App';
 import renderablesCatalog from './testRenderablesCatalog';
 
