@@ -10,7 +10,6 @@ function App() {
   const [entityOptions, setEntityOptions] = React.useState([]);
   const [rSetOptions, setRSetOptions] = React.useState([]);
   const [isFetching, setIsFetching] = React.useState(false);
-  const [isFetchingDone, setIsFetchingDone] = React.useState(false);
   const [renderablesHash, setRenderablesHash] = React.useState('');
 
   const handleEntityChange = (value) => {
@@ -35,7 +34,8 @@ function App() {
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
-    if (isFetching || isFetchingDone) {
+    console.log("1 " + isFetching);
+    if (isFetching || renderablesHash) {
       return cleanup
     }
     setIsFetching(true)
@@ -60,11 +60,10 @@ function App() {
         }));
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
-        setIsFetchingDone(true)
         setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
       return cleanup
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, isFetching, uuidFromQuery, renderablesHash]);
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetching, uuidFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (

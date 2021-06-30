@@ -25,6 +25,7 @@ test('tabs are rendered', () => {
     expect(container.getElementsByClassName('loader').length).toBe(1);
     await waitForElementToBeRemoved(document.querySelector('.loader'));
     expect(container.getElementsByClassName('loader').length).toBe(0);
+    
     global.fetch.mockRestore();
   });
 
@@ -60,4 +61,6 @@ test('tabs are rendered', () => {
     expect(screen.getByText("Presentation")).toHaveClass('tab-selected');
     expect(screen.getByText("Definition")).not.toHaveClass('tab-selected');
     expect(screen.getByText("Calculation")).not.toHaveClass('tab-selected');
+
+    global.fetch.mockRestore();
   });

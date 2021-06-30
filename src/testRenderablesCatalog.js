@@ -4,7 +4,7 @@ const testData = {
         {
             "Name": "CORPORATION INC",
             "Entity": {
-                "Scheme": "http://www.website.com/",
+                "Scheme": "http://www.website.com",
                 "CharData": "0001445305"
             }
         }
@@ -24,10 +24,10 @@ const testData = {
         }
     ],
     "Networks": {
-        "http://www.sec.gov/CIK/0001445305": {
+        "http://www.website.com/0001445305": {
+            "http://www.website.com/role/CoverPage": "5411897514fwe894984few8915wfe",
             "http://www.website.com/role/CONDENSEDCONSOLIDATEDBALANCESHEETS": "883459b49fae34a739704b6db51d6b1d",
-            "http://www.website.com/role/CONDENSEDCONSOLIDATEDBALANCESHEETSParenthetical": "1d2ec03fda1e440ad6d6f7953aaa2967",
-            "http://www.website.com/role/CONDENSEDCONSOLIDATEDSTATEMENTSOFCASHFLOWS": "b942a312a28a46b316490ea839ac9b90",
+            "http://www.website.com/role/CONDENSEDCONSOLIDATEDBALANCESHEETSParenthetical": "1d2ec03fda1e440ad6d6f7953aaa2967"
         }
     }
 };
