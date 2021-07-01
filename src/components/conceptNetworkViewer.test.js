@@ -10,7 +10,7 @@ test('tabs are rendered', () => {
     expect(screen.getByText("Calculation")).toBeTruthy();
   });
 
-  test('loader displays while fetching and stops displaying when finished', async () => {
+  test.skip('loader displays while fetching and stops displaying when finished', async () => {
     const testUuid = 'testUuid';
     const testHash = 'testHash';
     let container;
@@ -29,7 +29,7 @@ test('tabs are rendered', () => {
     global.fetch.mockRestore();
   });
 
-  test('correct tab is selected', async () => {
+  test.skip('correct tab is selected', async () => {
     const testUuid = 'testUuid';
     const testHash = 'testHash';
     const waitForMe = Promise.resolve({ json: () => {Promise.resolve({testRenderables})} })

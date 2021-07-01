@@ -11,13 +11,16 @@ function App() {
   const [rSetOptions, setRSetOptions] = React.useState([]);
   const [isFetchingDone, setIsFetchingDone] = React.useState(false);
   const [renderablesHash, setRenderablesHash] = React.useState('');
+  const [currentNetwork, setCurrentNetwork] = React.useState(null);
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
+    setRenderablesHash(currentNetwork[value.value][rSetSelected.value]);
   };
   
   const handleRSetChange = (value) => {
     setRSetSelected(value);
+    setRenderablesHash(currentNetwork[entitySelected.value][value.value]);
   };
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -52,6 +55,7 @@ function App() {
         }));
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
+        setCurrentNetwork(data.Networks);
         setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
       return
