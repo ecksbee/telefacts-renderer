@@ -9,8 +9,8 @@ function App() {
   const [rSetSelected, setRSetSelected] = React.useState(null);
   const [entityOptions, setEntityOptions] = React.useState([]);
   const [rSetOptions, setRSetOptions] = React.useState([]);
-  const [isFetching, setIsFetching] = React.useState(false);
   const [isFetchingDone, setIsFetchingDone] = React.useState(false);
+  const [renderablesHash, setRenderablesHash] = React.useState('');
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
@@ -20,23 +20,16 @@ function App() {
     setRSetSelected(value);
   };
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuidFromQuery = urlParams.get('uuid');
+
   useEffect(() => {
-    let unmounted = false
-    const cleanup = () => {
-      unmounted = true
-    }
-    if (unmounted) {
-      return cleanup
-    }
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuidFromQuery = urlParams.get('uuid');
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
-    if (isFetching || isFetchingDone) {
-      return cleanup
+    if (isFetchingDone) {
+      return
     }
-    setIsFetching(true)
     fetch('/projects/' + uuidFromQuery + '/renderables')
       .then(response => response.json())
       .then(data => {
@@ -48,6 +41,7 @@ function App() {
             key: value
           }
         });
+        setIsFetchingDone(true)
         setEntityOptions(entities)
         setEntitySelected(entities[0])
         const rSets = data.RelationshipSets.map(rSet => ({
@@ -58,10 +52,10 @@ function App() {
         }));
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
-        setIsFetchingDone(true)
+        setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
-      return cleanup
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, isFetching]);
+      return
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, uuidFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (
@@ -72,7 +66,7 @@ function App() {
       rSetSelected={rSetSelected}
       rSetOptions={rSetOptions} />
 
-      <RViewer rSetSelected={rSetSelected} />
+      <RViewer rSetSelected={rSetSelected} uuidFromQuery={uuidFromQuery} renderablesHash={renderablesHash} />
       </>
     );
   }

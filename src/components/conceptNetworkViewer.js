@@ -1,24 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
 const definition = "definition";
 const calculation = "calculation";
 
-function ConceptNetworkViewer() {
+function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
     const [tabs, setTabs] = React.useState(presentation);
+    const [isFetchingDone, setIsFetchingDone] = React.useState(false);
 
     const presentationClass = (tabs===presentation)?"tab-selected":"";
     const definitionClass = (tabs===definition)?"tab-selected":"";
     const calculationClass = (tabs===calculation)?"tab-selected":"";
 
+    useEffect(() => {
+        if (!uuidFromQuery || !renderablesHash || isFetchingDone){
+            return;
+        }
+        fetch('/projects/' + uuidFromQuery + '/renderables/' + renderablesHash)
+        .then(response => response.json())
+        .then(data => { setIsFetchingDone(true) });
+    },[uuidFromQuery, renderablesHash, isFetchingDone]);
+
     return (
+        <>
         <div className="tab">
             <button className={presentationClass} onClick={_=>setTabs(presentation)}>Presentation</button>
             <button className={definitionClass} onClick={_=>setTabs(definition)}>Definition</button>
             <button className={calculationClass} onClick={_=>setTabs(calculation)}>Calculation</button>
         </div>
+
+        {!isFetchingDone && <div className="loader" title="loader"></div>}
+        </>
     )
 }
+
+ConceptNetworkViewer.propTypes = {
+    uuidFromQuery: PropTypes.string,
+    renderablesHash: PropTypes.string
+};
 
 export default ConceptNetworkViewer;

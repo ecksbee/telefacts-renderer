@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import App from './App';
 import renderablesCatalog from './testRenderablesCatalog';
 
@@ -23,16 +23,25 @@ test('renders the app with a given query string of uuid and successfully calls f
     return null;
   });
   const waitForMe = Promise.resolve({ json: () => Promise.resolve(renderablesCatalog) })
+  const urlMap = {};
   const fetchMock = jest
     .spyOn(global, 'fetch')
-    .mockImplementation(() => waitForMe)
+    .mockImplementation((url) => {
+      let acc = urlMap[url];
+      if (!acc) {
+        acc = 0;
+      }
+      acc++
+      urlMap[url] = acc;
+      return waitForMe
+    })
   await act(
     async () => {
       render(<App />)
       await waitForMe
     }
   )
-  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(urlMap['/projects/' + testUuid + '/renderables']).toEqual(1);
   expect(fetchMock).toHaveBeenCalledWith('/projects/' + testUuid + '/renderables');
   global.fetch.mockRestore();
 });
