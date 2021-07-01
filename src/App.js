@@ -9,7 +9,7 @@ function App() {
   const [rSetSelected, setRSetSelected] = React.useState(null);
   const [entityOptions, setEntityOptions] = React.useState([]);
   const [rSetOptions, setRSetOptions] = React.useState([]);
-  const [isFetching, setIsFetching] = React.useState(false);
+  const [isFetchingDone, setIsFetchingDone] = React.useState(false);
   const [renderablesHash, setRenderablesHash] = React.useState('');
 
   const handleEntityChange = (value) => {
@@ -24,21 +24,12 @@ function App() {
   const uuidFromQuery = urlParams.get('uuid');
 
   useEffect(() => {
-    let unmounted = false
-    const cleanup = () => {
-      unmounted = true
-    }
-    if (unmounted) {
-      return cleanup
-    }
     if (!uuidFromQuery) {
       throw new Error('missing uuid');
     }
-    console.log("1 " + isFetching);
-    if (isFetching || renderablesHash) {
-      return cleanup
+    if (isFetchingDone) {
+      return
     }
-    setIsFetching(true)
     fetch('/projects/' + uuidFromQuery + '/renderables')
       .then(response => response.json())
       .then(data => {
@@ -50,6 +41,7 @@ function App() {
             key: value
           }
         });
+        setIsFetchingDone(true)
         setEntityOptions(entities)
         setEntitySelected(entities[0])
         const rSets = data.RelationshipSets.map(rSet => ({
@@ -62,8 +54,8 @@ function App() {
         setRSetSelected(rSets[0])
         setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
-      return cleanup
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetching, uuidFromQuery, renderablesHash]);
+      return
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, uuidFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (
