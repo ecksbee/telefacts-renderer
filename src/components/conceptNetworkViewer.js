@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import PGridViewer from './PGridViewer';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
@@ -9,6 +10,7 @@ const calculation = "calculation";
 function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
     const [tabs, setTabs] = React.useState(presentation);
     const [currentHash, setCurrentHash] = React.useState(renderablesHash);
+    const [renderablesData, setRenderablesData] = React.useState(null);
 
     const presentationClass = (tabs===presentation)?"tab-selected":"";
     const definitionClass = (tabs===definition)?"tab-selected":"";
@@ -21,7 +23,7 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
         setCurrentHash(renderablesHash);
         fetch('/projects/' + uuidFromQuery + '/renderables/' + renderablesHash)
         .then(response => response.json())
-        .then(data => {});
+        .then(data => {setRenderablesData(data)});
         return
     },[uuidFromQuery, renderablesHash, currentHash]);
 
@@ -34,6 +36,8 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
         </div>
 
         {!(renderablesHash === currentHash) && <div className="loader" title="loader"></div>}
+
+        {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
         </>
     )
 }
