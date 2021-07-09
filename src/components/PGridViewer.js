@@ -10,31 +10,23 @@ class PGridViewer extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if ((!prevProps || !prevProps.renderablesData) && !this.props.renderablesData) {
-            return
-        }
-        console.log(prevProps);
-        if (prevProps.renderablesData.RelationshipSet.RoleURI === this.props.renderablesData.RelationshipSet.RoleURI) { 
-            return
-        }
-        if (prevProps.renderablesData.Subject.Name === this.props.renderablesData.Subject.Name) { 
-            return
-        }
-        console.log(this.props.renderablesData);
-        //const maxColumns = this.props.renderablesData.PGrid.MaxIndentation+1+this.props.renderablesData.PGrid.FactualQuadrant[0].length;
-        //const maxRows = this.props.renderablesData.PGrid.MaxDepth+1+this.props.renderablesData.PGrid.FactualQuadrant.length;
-        const maxColumns = 2;
-        const maxRows = 2;
-        let grid = [];
+      if (!this.props.renderablesData || (prevProps && prevProps.renderablesData && this.props.renderablesData)) {
+        return
+      }
+      
+      const maxColumns = this.props.renderablesData.PGrid.MaxIndentation+1+this.props.renderablesData.PGrid.FactualQuadrant[0].length;
+      const maxRows = this.props.renderablesData.PGrid.MaxDepth+1+this.props.renderablesData.PGrid.FactualQuadrant.length;
+
+      let grid = [];
   
-        for (let i=0; i<maxRows; i++) {
-            grid.push([]);
-          for (let j=0; j<maxColumns; j++) {
-                  grid[i].push({value: i + ' x ' + j});
-              }
-        }
-        this.setState({grid});
-    }
+      for (let i=0; i<maxRows; i++) {
+        grid.push([]);
+        for (let j=0; j<maxColumns; j++) {
+            grid[i].push({value: i + ' x ' + j});
+          }
+      }
+      this.setState({grid});
+  }
 
     render() {
         if (!this.state.grid) {
