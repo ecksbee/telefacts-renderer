@@ -41,6 +41,13 @@ class PGridViewer extends React.Component {
             if (PGrid.IndentedLabels[i-PGrid.MaxDepth-1].Indentation === j) {
               cellValue = PGrid.IndentedLabels[i-PGrid.MaxDepth-1].Label.Default.Unlabelled;
             }
+          } else {
+            let thisFact = PGrid.FactualQuadrant[i-PGrid.MaxDepth-1][j-PGrid.MaxIndentation].Unlabelled;
+            if (thisFact.TextBlock === "") {
+              cellValue = thisFact.Head.concat(thisFact.Core,thisFact.Tail);
+            } else {
+              cellValue = thisFact.TextBlock;
+            }
           }
         }
         grid[i].push({
