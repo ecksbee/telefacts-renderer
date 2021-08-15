@@ -24,7 +24,7 @@ function App() {
   };
 
   const urlParams = new URLSearchParams(window.location.search);
-  const uuidFromQuery = urlParams.get('uuid');
+  const uuidFromQuery = urlParams.get('id');
 
   useEffect(() => {
     if (!uuidFromQuery) {
@@ -33,7 +33,7 @@ function App() {
     if (isFetchingDone) {
       return
     }
-    fetch('/projects/' + uuidFromQuery + '/renderables')
+    fetch('/folders/' + uuidFromQuery)
       .then(response => response.json())
       .then(data => {
         const entities = data.Subjects.map(subject => {
