@@ -1,27 +1,31 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import PGridViewer from './PGridViewer';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
 const definition = "definition";
 const calculation = "calculation";
 
-function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
+function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
     const [tabs, setTabs] = React.useState(presentation);
-    const [isFetchingDone, setIsFetchingDone] = React.useState(false);
+    const [currentHash, setCurrentHash] = React.useState(renderablesHash);
+    const [renderablesData, setRenderablesData] = React.useState(null);
 
     const presentationClass = (tabs===presentation)?"tab-selected":"";
     const definitionClass = (tabs===definition)?"tab-selected":"";
     const calculationClass = (tabs===calculation)?"tab-selected":"";
 
     useEffect(() => {
-        if (!uuidFromQuery || !renderablesHash || isFetchingDone){
+        if (!idFromQuery || (renderablesHash === currentHash)){
             return;
         }
-        fetch('/projects/' + uuidFromQuery + '/renderables/' + renderablesHash)
+        setCurrentHash(renderablesHash);
+        fetch('/folders/' + idFromQuery + '/' + renderablesHash)
         .then(response => response.json())
-        .then(data => { setIsFetchingDone(true) });
-    },[uuidFromQuery, renderablesHash, isFetchingDone]);
+        .then(data => {setRenderablesData(data)});
+        return
+    },[idFromQuery, renderablesHash, currentHash]);
 
     return (
         <>
@@ -31,13 +35,15 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
             <button className={calculationClass} onClick={_=>setTabs(calculation)}>Calculation</button>
         </div>
 
-        {!isFetchingDone && <div className="loader" title="loader"></div>}
+        {!(renderablesHash === currentHash) && <div className="loader" title="loader"></div>}
+
+        {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
         </>
     )
 }
 
 ConceptNetworkViewer.propTypes = {
-    uuidFromQuery: PropTypes.string,
+    idFromQuery: PropTypes.string,
     renderablesHash: PropTypes.string
 };
 

@@ -11,26 +11,29 @@ function App() {
   const [rSetOptions, setRSetOptions] = React.useState([]);
   const [isFetchingDone, setIsFetchingDone] = React.useState(false);
   const [renderablesHash, setRenderablesHash] = React.useState('');
+  const [currentNetwork, setCurrentNetwork] = React.useState(null);
 
   const handleEntityChange = (value) => {
     setEntitySelected(value);
+    setRenderablesHash(currentNetwork[value.value][rSetSelected.value]);
   };
   
   const handleRSetChange = (value) => {
     setRSetSelected(value);
+    setRenderablesHash(currentNetwork[entitySelected.value][value.value]);
   };
 
   const urlParams = new URLSearchParams(window.location.search);
-  const uuidFromQuery = urlParams.get('uuid');
+  const idFromQuery = urlParams.get('id');
 
   useEffect(() => {
-    if (!uuidFromQuery) {
-      throw new Error('missing uuid');
+    if (!idFromQuery) {
+      throw new Error('missing id');
     }
     if (isFetchingDone) {
       return
     }
-    fetch('/projects/' + uuidFromQuery + '/renderables')
+    fetch('/folders/' + idFromQuery)
       .then(response => response.json())
       .then(data => {
         const entities = data.Subjects.map(subject => {
@@ -52,10 +55,11 @@ function App() {
         }));
         setRSetOptions(rSets)
         setRSetSelected(rSets[0])
+        setCurrentNetwork(data.Networks);
         setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
       return
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, uuidFromQuery, renderablesHash]);
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, idFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (
@@ -66,7 +70,7 @@ function App() {
       rSetSelected={rSetSelected}
       rSetOptions={rSetOptions} />
 
-      <RViewer rSetSelected={rSetSelected} uuidFromQuery={uuidFromQuery} renderablesHash={renderablesHash} />
+      <RViewer rSetSelected={rSetSelected} idFromQuery={idFromQuery} renderablesHash={renderablesHash} />
       </>
     );
   }

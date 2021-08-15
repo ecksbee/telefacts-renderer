@@ -5,7 +5,7 @@ import renderablesCatalog from './testRenderablesCatalog';
 test('renders the app with no errors or failures', () => {
   expect(() => {
     jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((key) => {
-      if (key === 'uuid') {
+      if (key === 'id') {
         return 'abc';
       }
       return null;
@@ -14,11 +14,11 @@ test('renders the app with no errors or failures', () => {
   }).not.toThrow();
 });
 
-test('renders the app with a given query string of uuid and successfully calls fetch', async () => {
-  const testUuid = 'testUuid';
+test('renders the app with a given query string of id and successfully calls fetch', async () => {
+  const testId = 'testId';
   jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((key) => {
-    if (key === 'uuid') {
-      return testUuid;
+    if (key === 'id') {
+      return testId;
     }
     return null;
   });
@@ -41,16 +41,16 @@ test('renders the app with a given query string of uuid and successfully calls f
       await waitForMe
     }
   )
-  expect(urlMap['/projects/' + testUuid + '/renderables']).toEqual(1);
-  expect(fetchMock).toHaveBeenCalledWith('/projects/' + testUuid + '/renderables');
+  expect(urlMap['/folders/' + testId]).toEqual(1);
+  expect(fetchMock).toHaveBeenCalledWith('/folders/' + testId);
   global.fetch.mockRestore();
 });
 
 test('first item in dropdown is selected by default', async () => {
-  const testUuid = 'testUuid';
+  const testId = 'testId';
   jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((key) => {
-    if (key === 'uuid') {
-      return testUuid;
+    if (key === 'id') {
+      return testId;
     }
     return null;
   });
