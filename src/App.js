@@ -24,16 +24,16 @@ function App() {
   };
 
   const urlParams = new URLSearchParams(window.location.search);
-  const uuidFromQuery = urlParams.get('id');
+  const idFromQuery = urlParams.get('id');
 
   useEffect(() => {
-    if (!uuidFromQuery) {
-      throw new Error('missing uuid');
+    if (!idFromQuery) {
+      throw new Error('missing id');
     }
     if (isFetchingDone) {
       return
     }
-    fetch('/folders/' + uuidFromQuery)
+    fetch('/folders/' + idFromQuery)
       .then(response => response.json())
       .then(data => {
         const entities = data.Subjects.map(subject => {
@@ -59,7 +59,7 @@ function App() {
         setRenderablesHash(data.Networks[entities[0].value][rSets[0].value]);
       });
       return
-  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, uuidFromQuery, renderablesHash]);
+  },[entityOptions, rSetOptions, rSetSelected, entitySelected, isFetchingDone, idFromQuery, renderablesHash]);
 
   if (entitySelected && rSetSelected) {
     return (
@@ -70,7 +70,7 @@ function App() {
       rSetSelected={rSetSelected}
       rSetOptions={rSetOptions} />
 
-      <RViewer rSetSelected={rSetSelected} uuidFromQuery={uuidFromQuery} renderablesHash={renderablesHash} />
+      <RViewer rSetSelected={rSetSelected} idFromQuery={idFromQuery} renderablesHash={renderablesHash} />
       </>
     );
   }

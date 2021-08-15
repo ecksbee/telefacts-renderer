@@ -7,7 +7,7 @@ const presentation = "presentation";
 const definition = "definition";
 const calculation = "calculation";
 
-function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
+function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
     const [tabs, setTabs] = React.useState(presentation);
     const [currentHash, setCurrentHash] = React.useState(renderablesHash);
     const [renderablesData, setRenderablesData] = React.useState(null);
@@ -17,15 +17,15 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
     const calculationClass = (tabs===calculation)?"tab-selected":"";
 
     useEffect(() => {
-        if (!uuidFromQuery || (renderablesHash === currentHash)){
+        if (!idFromQuery || (renderablesHash === currentHash)){
             return;
         }
         setCurrentHash(renderablesHash);
-        fetch('/projects/' + uuidFromQuery + '/renderables/' + renderablesHash)
+        fetch('/folders/' + idFromQuery + '/' + renderablesHash)
         .then(response => response.json())
         .then(data => {setRenderablesData(data)});
         return
-    },[uuidFromQuery, renderablesHash, currentHash]);
+    },[idFromQuery, renderablesHash, currentHash]);
 
     return (
         <>
@@ -43,7 +43,7 @@ function ConceptNetworkViewer({uuidFromQuery, renderablesHash}) {
 }
 
 ConceptNetworkViewer.propTypes = {
-    uuidFromQuery: PropTypes.string,
+    idFromQuery: PropTypes.string,
     renderablesHash: PropTypes.string
 };
 

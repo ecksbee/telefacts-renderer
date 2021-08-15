@@ -7,7 +7,7 @@ class PGridViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grid: null
+      grid: this.getPGrid(this.props.renderablesData?.PGrid)
     };
   }
 
@@ -19,13 +19,19 @@ class PGridViewer extends React.Component {
       return
     }
 
-    const PGrid = this.props.renderablesData.PGrid;
+    const PGrid = this.getPGrid(this.props.renderablesData.PGrid)
+    this.setState({
+      grid: PGrid
+    });
+  }
 
+  getPGrid(PGrid) {
+    if (!PGrid) {
+      return null
+    }
     const maxColumns = PGrid.MaxIndentation + PGrid.FactualQuadrant[0].length;
     const maxRows = PGrid.MaxDepth + 1 + PGrid.FactualQuadrant.length;
-    
     let grid = [];
-
     for (let i = 0; i < maxRows; i++) {
       grid.push([]);
       for (let j = 0; j < maxColumns; j++) {
@@ -55,9 +61,7 @@ class PGridViewer extends React.Component {
         });
       }
     }
-    this.setState({
-      grid
-    });
+    return grid
   }
 
   render() {
