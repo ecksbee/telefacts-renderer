@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import PGridViewer from './PGridViewer';
+import DGridViewer from './DGridViewer';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
@@ -38,6 +39,7 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
         {!(renderablesHash === currentHash) && <div className="loader" title="loader"></div>}
 
         {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
+        {tabs===definition && <DGridViewer renderablesData={renderablesData} />}
         </>
     )
 }
