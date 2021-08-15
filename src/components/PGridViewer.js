@@ -29,6 +29,75 @@ class PGridViewer extends React.Component {
     if (!PGrid) {
       return null
     }
+    const grid = [];
+    const maxRow = PGrid.IndentedLabels.length + PGrid.MaxDepth + 1;
+    const maxCol = PGrid.RelevantContexts.length + PGrid.MaxIndentation;
+    for(let i = 0; i < maxRow; i++) {
+      const row = [];
+      if (i < PGrid.MaxDepth + 1) {
+        for(let j = 0; j < maxCol; j++) {
+          if (j < PGrid.MaxIndentation) {
+            row.push({
+              value: ""
+            });
+          }
+          else {
+            const index = j - PGrid.MaxIndentation;
+            const rc = PGrid.RelevantContexts[index];
+            if (i === 0) {
+              row.push({
+                  value: rc.PeriodHeader.Unlabelled
+              });
+            }
+            else {
+              const dmIndex = i - 1;
+              if (rc.Dimensions.length) {
+                row.push({
+                  value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
+                });
+              }
+              else {
+                row.push({
+                  value: ""
+                })
+              }
+            }
+          }
+        }
+      }
+      else {
+        for(let j = 0; j < maxCol; j++) {
+          const index = i - PGrid.MaxDepth - 1;
+          const il = PGrid.IndentedLabels[index];
+          if (il && j === il.Indentation) {
+            row.push({
+              value: il.Label.Default.Unlabelled
+            });
+          }
+          else {
+            if (j < PGrid.MaxIndentation) {
+              row.push({
+                value: ""
+              });
+            }
+            else {
+              const fact = PGrid.FactualQuadrant[index][j - PGrid.MaxIndentation];
+              row.push({
+                value: fact.Unlabelled.Core+fact.Unlabelled.Tail
+              });
+            }
+          }
+        }
+      }
+      grid.push(row)
+    }
+    return grid
+  }
+
+  oldgetPGrid(PGrid) {
+    if (!PGrid) {
+      return null
+    }
     const maxColumns = PGrid.MaxIndentation + PGrid.FactualQuadrant[0].length;
     const maxRows = PGrid.MaxDepth + 1 + PGrid.FactualQuadrant.length;
     let grid = [];
@@ -40,7 +109,7 @@ class PGridViewer extends React.Component {
           cellValue = PGrid.RelevantContexts[j - PGrid.MaxIndentation].PeriodHeader.Unlabelled;
         } else if (i <= PGrid.MaxDepth && j >= PGrid.MaxIndentation) {
           if (PGrid.RelevantContexts[j-PGrid.MaxIndentation].Dimensions.length>0) {
-            cellValue = PGrid.RelevantContexts[j-PGrid.MaxIndentation].Dimensions[0].ExplicitMember.Label.Default["en - english"];
+            cellValue = PGrid.RelevantContexts[j-PGrid.MaxIndentation].Dimensions[0].ExplicitMember.Label.Default.Unlabelled;
           }
         } else if (i > PGrid.MaxDepth) {
           if (j < PGrid.MaxIndentation) {

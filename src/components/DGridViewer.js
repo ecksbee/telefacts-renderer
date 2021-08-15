@@ -29,37 +29,67 @@ class DGridViewer extends React.Component {
     if (!DGrid) {
       return null
     }
-    const maxColumns = DGrid.MaxLevel + DGrid.FactualQuadrant[0].length;
-    const maxRows = DGrid.MaxDepth + DGrid.FactualQuadrant.length;
-    let grid = [];
-    for (let i = 0; i < maxRows; i++) {
-      grid.push([]);
-      for (let j = 0; j < maxColumns; j++) {
-        let cellValue = '';
-        if (i === 0 && j >= DGrid.MaxLevel) {
-          cellValue = DGrid.RelevantContexts[j - DGrid.MaxLevel].PeriodHeader.Unlabelled;
-        } else if (i <= DGrid.MaxDepth && j >= DGrid.MaxLevel) {
-          if (DGrid.RelevantContexts[j-DGrid.MaxLevel].Dimensions.length>0) {
-            cellValue = DGrid.RelevantContexts[j-DGrid.MaxLevel].Dimensions[0].ExplicitMember.Label.Default["en - english"];
-          }
-        } else if (i > DGrid.MaxDepth) {
+    const grid = [];
+    const maxRow = DGrid.PrimaryItems.length + DGrid.MaxDepth + 1;
+    const maxCol = DGrid.RelevantContexts.length + DGrid.MaxLevel;
+    for(let i = 0; i < maxRow; i++) {
+      const row = [];
+      if (i < DGrid.MaxDepth + 1) {
+        for(let j = 0; j < maxCol; j++) {
           if (j < DGrid.MaxLevel) {
-            if (DGrid.PrimaryItems[i-DGrid.MaxDepth]?.Level === j) {
-              cellValue = DGrid.PrimaryItems[i-DGrid.MaxDepth].Label.Default.Unlabelled;
+            row.push({
+              value: ""
+            });
+          }
+          else {
+            const index = j - DGrid.MaxLevel;
+            const rc = DGrid.RelevantContexts[index];
+            if (i === 0) {
+              row.push({
+                  value: rc.PeriodHeader.Unlabelled
+              });
             }
-          } else {
-            let thisFact = DGrid.FactualQuadrant[i-DGrid.MaxDepth-1][j-DGrid.MaxLevel].Unlabelled;
-            if (thisFact.TextBlock === "") {
-              cellValue = thisFact.Head.concat(thisFact.Core,thisFact.Tail);
-            } else {
-              cellValue = thisFact.TextBlock;
+            else {
+              const dmIndex = i - 1;
+              if (rc.Dimensions.length) {
+                row.push({
+                  value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
+                });
+              }
+              else {
+                row.push({
+                  value: ""
+                })
+              }
             }
           }
         }
-        grid[i].push({
-          value: cellValue
-        });
       }
+      else {
+        for(let j = 0; j < maxCol; j++) {
+          const index = i - DGrid.MaxDepth - 1;
+          const pitem = DGrid.PrimaryItems[index];
+          if (pitem && j === pitem.Level) {
+            row.push({
+              value: pitem.Label.Default.Unlabelled
+            });
+          }
+          else {
+            if (j < DGrid.MaxLevel) {
+              row.push({
+                value: ""
+              });
+            }
+            else {
+              const fact = DGrid.FactualQuadrant[index][j - DGrid.MaxLevel];
+              row.push({
+                value: fact.Unlabelled.Core+fact.Unlabelled.Tail
+              });
+            }
+          }
+        }
+      }
+      grid.push(row)
     }
     return grid
   }
