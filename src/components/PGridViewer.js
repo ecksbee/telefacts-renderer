@@ -94,45 +94,6 @@ class PGridViewer extends React.Component {
     return grid
   }
 
-  oldgetPGrid(PGrid) {
-    if (!PGrid) {
-      return null
-    }
-    const maxColumns = PGrid.MaxIndentation + PGrid.FactualQuadrant[0].length;
-    const maxRows = PGrid.MaxDepth + 1 + PGrid.FactualQuadrant.length;
-    let grid = [];
-    for (let i = 0; i < maxRows; i++) {
-      grid.push([]);
-      for (let j = 0; j < maxColumns; j++) {
-        let cellValue = '';
-        if (i === 0 && j >= PGrid.MaxIndentation) {
-          cellValue = PGrid.RelevantContexts[j - PGrid.MaxIndentation].PeriodHeader.Unlabelled;
-        } else if (i <= PGrid.MaxDepth && j >= PGrid.MaxIndentation) {
-          if (PGrid.RelevantContexts[j-PGrid.MaxIndentation].Dimensions.length>0) {
-            cellValue = PGrid.RelevantContexts[j-PGrid.MaxIndentation].Dimensions[0].ExplicitMember.Label.Default.Unlabelled;
-          }
-        } else if (i > PGrid.MaxDepth) {
-          if (j < PGrid.MaxIndentation) {
-            if (PGrid.IndentedLabels[i-PGrid.MaxDepth-1].Indentation === j) {
-              cellValue = PGrid.IndentedLabels[i-PGrid.MaxDepth-1].Label.Default.Unlabelled;
-            }
-          } else {
-            let thisFact = PGrid.FactualQuadrant[i-PGrid.MaxDepth-1][j-PGrid.MaxIndentation].Unlabelled;
-            if (thisFact.TextBlock === "") {
-              cellValue = thisFact.Head.concat(thisFact.Core,thisFact.Tail);
-            } else {
-              cellValue = thisFact.TextBlock;
-            }
-          }
-        }
-        grid[i].push({
-          value: cellValue
-        });
-      }
-    }
-    return grid
-  }
-
   render() {
     if (!this.state.grid) {
       return null;
