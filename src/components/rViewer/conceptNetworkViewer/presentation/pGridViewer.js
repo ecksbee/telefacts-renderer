@@ -51,7 +51,7 @@ class PGridViewer extends React.Component {
             }
             else {
               const dmIndex = i - 1;
-              if (rc.Dimensions.length) {
+              if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
                 row.push({
                   value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
                 });
