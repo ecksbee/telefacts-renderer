@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import SelectizeBox from './components/selectizeBox';
-import RViewer from './components/rViewer';
+import SelectizeBox from './components/selectorBar/selectizeBox';
+import RViewer from './components/rViewer/rViewer';
 import './App.css';
 
 function App() {

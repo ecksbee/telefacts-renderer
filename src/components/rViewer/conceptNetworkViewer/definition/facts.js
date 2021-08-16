@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 
-class DGridViewer extends React.Component {
+class DGridFacts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -83,7 +83,7 @@ class DGridViewer extends React.Component {
             else {
               const fact = DGrid.FactualQuadrant[index][j - DGrid.MaxLevel];
               row.push({
-                value: fact.Unlabelled.Core+fact.Unlabelled.Tail
+                value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
               });
             }
           }
@@ -129,8 +129,8 @@ class DGridViewer extends React.Component {
   }
 }
 
-DGridViewer.propTypes = {
+DGridFacts.propTypes = {
   renderablesData: PropTypes.object
 };
 
-export default DGridViewer
+export default DGridFacts

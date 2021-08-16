@@ -83,7 +83,7 @@ class PGridViewer extends React.Component {
             else {
               const fact = PGrid.FactualQuadrant[index][j - PGrid.MaxIndentation];
               row.push({
-                value: fact.Unlabelled.Core+fact.Unlabelled.Tail
+                value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
               });
             }
           }

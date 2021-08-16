@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import PGridViewer from './PGridViewer';
-import DGridViewer from './DGridViewer';
+import PGridViewer from './presentation/pGridViewer';
+import DGridViewer from './definition/dGridViewer';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
