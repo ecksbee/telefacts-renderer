@@ -82,9 +82,15 @@ class PGridViewer extends React.Component {
             }
             else {
               const fact = PGrid.FactualQuadrant[index][j - PGrid.MaxIndentation];
-              row.push({
-                value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-              });
+              if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
+                row.push({
+                  value: fact.Unlabelled.TextPreview
+                });
+              } else {
+                row.push({
+                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                });
+              }
             }
           }
         }

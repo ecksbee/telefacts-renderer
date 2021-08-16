@@ -89,9 +89,15 @@ class DGridFacts extends React.Component {
                 const fRow = i - DGrid.MaxDepth - 1;
                 const fCol = j - DGrid.MaxLevel - 1;
                 const fact = DGrid.FactualQuadrant[fRow][fCol];
-                row.push({
-                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                });
+                if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
+                  row.push({
+                    value: fact.Unlabelled.TextPreview
+                  });
+                } else {
+                  row.push({
+                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                  });
+                }
               }
             } else {
               if (j < DGrid.MaxLevel + 1) {
@@ -110,9 +116,15 @@ class DGridFacts extends React.Component {
                 const fRow = i - DGrid.MaxDepth - 1;
                 const fCol = j - DGrid.MaxLevel - 1;
                 const fact = DGrid.FactualQuadrant[fRow][fCol];
-                row.push({
-                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                });
+                if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
+                  row.push({
+                    value: fact.Unlabelled.TextPreview
+                  });
+                } else {
+                  row.push({
+                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                  });
+                }
               }
             }
           }
