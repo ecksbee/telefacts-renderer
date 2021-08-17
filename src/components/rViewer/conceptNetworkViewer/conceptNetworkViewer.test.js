@@ -41,17 +41,19 @@ test('loader displays while fetching and stops displaying when finished', async 
     global.fetch.mockRestore();
 });
 
-test.skip('correct tab is selected', async () => {
-    const testUuid = 'testUuid';
+test('correct tab is selected', async () => {
+    const testId = 'testID';
     const testHash = 'testHash';
     const waitForMe = Promise.resolve({ json: () => {Promise.resolve({testRenderables})} })
     jest.spyOn(global, 'fetch')
       .mockImplementation(() => waitForMe)
-    act(() => {
-      render(<ConceptNetworkViewer uuidFromQuery={testUuid} renderablesHash={testHash}/>)
+    await act(
+      async () => {
+        render(<ConceptNetworkViewer idFromQuery={testId} renderablesHash={testHash}/>);
+        await waitForElementToBeRemoved(document.querySelector('.loader'));
       }
     )
-    await waitForElementToBeRemoved(document.querySelector('.loader'));
+    
     expect(screen.getByText("Presentation")).toHaveClass('tab-selected');
     expect(screen.getByText("Definition")).not.toHaveClass('tab-selected');
     expect(screen.getByText("Calculation")).not.toHaveClass('tab-selected');
