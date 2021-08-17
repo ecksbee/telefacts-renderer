@@ -10,7 +10,7 @@ const calculation = "calculation";
 
 function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
     const [tabs, setTabs] = React.useState(presentation);
-    const [currentHash, setCurrentHash] = React.useState(renderablesHash);
+    const [currentHash, setCurrentHash] = React.useState('');
     const [renderablesData, setRenderablesData] = React.useState(null);
 
     const presentationClass = (tabs===presentation)?"tab-selected":"";
@@ -18,13 +18,13 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
     const calculationClass = (tabs===calculation)?"tab-selected":"";
 
     useEffect(() => {
-        if (!idFromQuery || (renderablesHash === currentHash)){
+        if (!idFromQuery || !renderablesHash || (renderablesHash === currentHash)){
             return;
         }
         setCurrentHash(renderablesHash);
         fetch('/folders/' + idFromQuery + '/' + renderablesHash)
-        .then(response => response.json())
-        .then(data => {setRenderablesData(data)});
+            .then(response => response.json())
+            .then(data => {setRenderablesData(data)});
         return
     },[idFromQuery, renderablesHash, currentHash]);
 
@@ -36,7 +36,7 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
             <button className={calculationClass} onClick={_=>setTabs(calculation)}>Calculation</button>
         </div>
 
-        {!(renderablesHash === currentHash) && <div className="loader" title="loader"></div>}
+        {(renderablesHash !== currentHash) && <div className="loader" title="loader"></div>}
 
         {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
         {tabs===definition && <DGridViewer renderablesData={renderablesData} />}

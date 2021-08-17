@@ -7,43 +7,43 @@ class DGridFacts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grid: this.getDGrid(this.props.renderablesData?.DGrid.RootDomains[0])
+      grid: this.getRootDomain(this.props.rootDomain)
     };
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.renderablesData) {
+    if (!this.props.rootDomain) {
       return
     }
-    if (prevProps && prevProps.renderablesData && this.props.renderablesData && (prevProps.renderablesData===this.props.renderablesData)) {
+    if (prevProps && prevProps.rootDomain && this.props.rootDomain && (prevProps.rootDomain===this.props.rootDomain)) {
       return
     }
 
-    const DGrid = this.getDGrid(this.props.renderablesData.DGrid.RootDomains[0])
+    const RootDomain = this.getRootDomain(this.props.rootDomain)
     this.setState({
-      grid: DGrid
+      grid: RootDomain
     });
   }
 
-  getDGrid(DGrid) {
-    if (!DGrid) {
+  getRootDomain(RootDomain) {
+    if (!RootDomain) {
       return null
     }
     const grid = [];
-    const maxRow = DGrid.PrimaryItems.length + DGrid.MaxDepth + 2;
-    const maxCol = DGrid.RelevantContexts.length + DGrid.MaxLevel + 1;
+    const maxRow = RootDomain.PrimaryItems.length + RootDomain.MaxDepth + 2;
+    const maxCol = RootDomain.RelevantContexts.length + RootDomain.MaxLevel + 1;
     for(let i = 0; i < maxRow; i++) {
       const row = [];
-      if (i < DGrid.MaxDepth + 1) {
+      if (i < RootDomain.MaxDepth + 1) {
         for(let j = 0; j < maxCol; j++) {
-          if (j < DGrid.MaxLevel + 1) {
+          if (j < RootDomain.MaxLevel + 1) {
             row.push({
               value: ""
             });
           }
           else {
-            const index = j - DGrid.MaxLevel;
-            const rc = DGrid.RelevantContexts[index - 1];
+            const index = j - RootDomain.MaxLevel;
+            const rc = RootDomain.RelevantContexts[index - 1];
             if (i === 0) {
               row.push({
                   value: rc.PeriodHeader.Unlabelled
@@ -68,9 +68,9 @@ class DGridFacts extends React.Component {
       else {
         for(let j = 0; j < maxCol; j++) {
           if (j === 0) {
-            if (i === DGrid.MaxDepth + 1) {
+            if (i === RootDomain.MaxDepth + 1) {
               row.push({
-                value: DGrid.Label.Default.Unlabelled
+                value: RootDomain.Label.Default.Unlabelled
               });
             } else {
               row.push({
@@ -79,16 +79,16 @@ class DGridFacts extends React.Component {
             }
           }
           else {            
-            if (i === DGrid.MaxDepth + 1) {
-              if (j < DGrid.MaxLevel + 1) {
+            if (i === RootDomain.MaxDepth + 1) {
+              if (j < RootDomain.MaxLevel + 1) {
                 row.push({
                   value: ""
                 });
               }
               else {
-                const fRow = i - DGrid.MaxDepth - 1;
-                const fCol = j - DGrid.MaxLevel - 1;
-                const fact = DGrid.FactualQuadrant[fRow][fCol];
+                const fRow = i - RootDomain.MaxDepth - 1;
+                const fCol = j - RootDomain.MaxLevel - 1;
+                const fact = RootDomain.FactualQuadrant[fRow][fCol];
                 if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
                   row.push({
                     value: fact.Unlabelled.TextPreview
@@ -100,9 +100,9 @@ class DGridFacts extends React.Component {
                 }
               }
             } else {
-              if (j < DGrid.MaxLevel + 1) {
-                const pRow = i - DGrid.MaxDepth - 2;
-                const pitem = DGrid.PrimaryItems[pRow];
+              if (j < RootDomain.MaxLevel + 1) {
+                const pRow = i - RootDomain.MaxDepth - 2;
+                const pitem = RootDomain.PrimaryItems[pRow];
                 if (pitem.Level === j - 1) {
                   row.push({
                     value: pitem.Label.Default.Unlabelled
@@ -113,9 +113,9 @@ class DGridFacts extends React.Component {
                   });
                 }
               } else {
-                const fRow = i - DGrid.MaxDepth - 1;
-                const fCol = j - DGrid.MaxLevel - 1;
-                const fact = DGrid.FactualQuadrant[fRow][fCol];
+                const fRow = i - RootDomain.MaxDepth - 1;
+                const fCol = j - RootDomain.MaxLevel - 1;
+                const fact = RootDomain.FactualQuadrant[fRow][fCol];
                 if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
                   row.push({
                     value: fact.Unlabelled.TextPreview
@@ -171,7 +171,7 @@ class DGridFacts extends React.Component {
 }
 
 DGridFacts.propTypes = {
-  renderablesData: PropTypes.object
+  rootDomain: PropTypes.object
 };
 
 export default DGridFacts

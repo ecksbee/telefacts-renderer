@@ -8,28 +8,40 @@ test('tabs are rendered', () => {
     expect(screen.getByText("Presentation")).toBeTruthy();
     expect(screen.getByText("Definition")).toBeTruthy();
     expect(screen.getByText("Calculation")).toBeTruthy();
-  });
+});
 
-  test.skip('loader displays while fetching and stops displaying when finished', async () => {
-    const testUuid = 'testUuid';
+test('loader displays while fetching and stops displaying when finished', async () => {
+    const testId = 'testID';
     const testHash = 'testHash';
     let container;
     const waitForMe = Promise.resolve({ json: () => {Promise.resolve({testRenderables})} })
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(() => waitForMe)
-    act(() => {
-      const { container: localContainer } = render(<ConceptNetworkViewer uuidFromQuery={testUuid} renderablesHash={testHash}/>)
-      container = localContainer;
+    const urlMap = {};
+    const fetchMock = jest
+      .spyOn(global, 'fetch')
+      .mockImplementation((url) => {
+        let acc = urlMap[url];
+        if (!acc) {
+          acc = 0;
+        }
+        acc++
+        urlMap[url] = acc;
+        return waitForMe
+      })
+    await act(
+      async () => {
+        const { container: localContainer } = render(<ConceptNetworkViewer idFromQuery={testId} renderablesHash={testHash}/>);
+        expect(localContainer.getElementsByClassName('loader').length).toBe(1);
+        container = localContainer;
+        await waitForElementToBeRemoved(document.querySelector('.loader'));
       }
     )
-    expect(container.getElementsByClassName('loader').length).toBe(1);
-    await waitForElementToBeRemoved(document.querySelector('.loader'));
     expect(container.getElementsByClassName('loader').length).toBe(0);
-    
+    expect(urlMap['/folders/' + testId + '/' + testHash]).toEqual(1);
+    expect(fetchMock).toHaveBeenCalledWith('/folders/' + testId + '/' + testHash);
     global.fetch.mockRestore();
-  });
+});
 
-  test.skip('correct tab is selected', async () => {
+test.skip('correct tab is selected', async () => {
     const testUuid = 'testUuid';
     const testHash = 'testHash';
     const waitForMe = Promise.resolve({ json: () => {Promise.resolve({testRenderables})} })
@@ -63,4 +75,4 @@ test('tabs are rendered', () => {
     expect(screen.getByText("Calculation")).not.toHaveClass('tab-selected');
 
     global.fetch.mockRestore();
-  });
+});
