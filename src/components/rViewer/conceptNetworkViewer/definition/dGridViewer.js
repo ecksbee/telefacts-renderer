@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import FactViewer from './facts';
 import ArcDiagram from './arcDiagram';
 
-function DGridViewer({renderablesData}) {
+function DGridViewer({renderablesData, renderablesHash}) {
+    const [isVisualizationEnabled, setVisualization] = React.useState(true);
     const [rootDomain, setRootDomain] = React.useState(renderablesData?.DGrid.RootDomains[0]);
 
+    if (isVisualizationEnabled) {
+      return (
+        <ArcDiagram data={drsToD3(renderablesData?.DGrid.DRS)} renderablesHash={renderablesHash} />
+      )
+    }
     return (
-      <ArcDiagram data={drsToD3(renderablesData?.DGrid.DRS)} />
-    )
-    // return (
-    //     <FactViewer rootDomain={rootDomain} />
-    // );
+        <FactViewer rootDomain={rootDomain} />
+    );
 }
 
 const drsToD3 = (drs) => {
@@ -43,7 +46,8 @@ const drsToD3 = (drs) => {
 }
 
 DGridViewer.propTypes = {
-  renderablesData: PropTypes.object
+  renderablesData: PropTypes.object,
+  renderablesHash: PropTypes.string
 };
 
 export default DGridViewer;

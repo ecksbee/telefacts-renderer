@@ -2,10 +2,16 @@ import React from 'react';
 import * as d3 from 'd3';
 import './arcDiagram.css'
  
-const ArcDiagram = ({ data }) => {
+const ArcDiagram = ({ data, renderablesHash }) => {
     const svgRef = React.useRef(null);
+    const [currHash, setHash] = React.useState('');
     React.useEffect(() => {
         if (!data.nodes.length || !data.links.length) {
+            return
+        }
+        d3.select(svgRef.current).selectChildren().remove()
+        if (renderablesHash !== currHash) {
+            setHash(renderablesHash)
             return
         }
         const charWidth = 14;
@@ -21,7 +27,7 @@ const ArcDiagram = ({ data }) => {
             dMagic = data.nodes.length * charWidth,
             xMagic = Math.sin(Math.PI/4)*magic,
             yMagic = Math.cos(Math.PI/4)*magic,
-            width = dMagic + 2*xMagic,
+            width = dMagic + 1.5*xMagic,
             height = yMagic + dMagic*0.5;
 
         const svg = d3.select(svgRef.current)
@@ -29,7 +35,8 @@ const ArcDiagram = ({ data }) => {
             .attr("viewBox",[0,0,width,height])
             .attr("width", width)
             .attr("height", height)
-            .append("g");
+            .append("g")
+            .attr("id", "theG");
         const allNodes = data.nodes.map(d => d.name)
         let allGroups = data.nodes.map(d => d.grp)
         allGroups = [...new Set(allGroups)]
@@ -56,8 +63,8 @@ const ArcDiagram = ({ data }) => {
             .data(data.links)
             .join('path')
             .attr('d', d => {
-                let start = x(idToNode[d.source].name) + xMagic    // X position of start node on the X axis
-                let end = x(idToNode[d.target].name) + xMagic      // X position of end node
+                let start = x(idToNode[d.source].name) + 0.6*xMagic    // X position of start node on the X axis
+                let end = x(idToNode[d.target].name) + 0.6*xMagic      // X position of end node
                 return ['M', start, height/2-18,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
                 'A',                            // This means we're gonna build an elliptical arc
                 (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
@@ -80,7 +87,7 @@ const ArcDiagram = ({ data }) => {
                 return 0;
             } ))
             .join("circle")
-            .attr("cx", d=>x(d.name) + xMagic)
+            .attr("cx", d=>x(d.name) + 0.6*xMagic)
             .attr("cy", height-30)
             .attr("r", d=>size(d.n))
             .style("fill", d=> color(d.grp))
@@ -93,11 +100,11 @@ const ArcDiagram = ({ data }) => {
             .attr("y", 0)
             .text(d=>d.name)
             .style("text-anchor", "end")
-            .attr("transform",d=>`translate(${x(d.name) + xMagic},${height/2-15}) rotate(-45)`)
+            .attr("transform",d=>`translate(${x(d.name) + 0.6*xMagic},${height/2-15}) rotate(-45)`)
             .style("font-size", 18)
             .style("font-family", "Calibri")
     
-    }, [data]);
+    }, [currHash, data, renderablesHash]);
  
   return <div id='arc-diagram' ref={svgRef} />;
 };

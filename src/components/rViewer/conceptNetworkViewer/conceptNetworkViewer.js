@@ -39,7 +39,7 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
         {(renderablesHash !== currentHash) && <div className="loader" title="loader"></div>}
 
         {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
-        {tabs===definition && <DGridViewer renderablesData={renderablesData} />}
+        {tabs===definition && <DGridViewer renderablesData={renderablesData} renderablesHash={renderablesHash} />}
         </>
     )
 }
