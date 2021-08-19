@@ -9,7 +9,7 @@ const definition = "definition";
 const calculation = "calculation";
 
 function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
-    const [tabs, setTabs] = React.useState(presentation);
+    const [tabs, setTabs] = React.useState(definition);
     const [currentHash, setCurrentHash] = React.useState('');
     const [renderablesData, setRenderablesData] = React.useState(null);
 
@@ -39,7 +39,7 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
         {(renderablesHash !== currentHash) && <div className="loader" title="loader"></div>}
 
         {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
-        {tabs===definition && <DGridViewer renderablesData={renderablesData} />}
+        {tabs===definition && <DGridViewer renderablesData={renderablesData} renderablesHash={renderablesHash} />}
         </>
     )
 }
