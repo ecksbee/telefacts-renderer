@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import PGridViewer from './presentation/pGridViewer';
 import DGridViewer from './definition/dGridViewer';
+import CGridViewer from './calculation/cGridViewer';
 import './conceptNetworkViewer.css';
 
 const presentation = "presentation";
@@ -9,7 +10,7 @@ const definition = "definition";
 const calculation = "calculation";
 
 function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
-    const [tabs, setTabs] = React.useState(definition);
+    const [tabs, setTabs] = React.useState(presentation);
     const [currentHash, setCurrentHash] = React.useState('');
     const [renderablesData, setRenderablesData] = React.useState(null);
 
@@ -40,6 +41,7 @@ function ConceptNetworkViewer({idFromQuery, renderablesHash}) {
 
         {tabs===presentation && <PGridViewer renderablesData={renderablesData} />}
         {tabs===definition && <DGridViewer renderablesData={renderablesData} renderablesHash={renderablesHash} />}
+        {tabs===calculation && <CGridViewer renderablesData={renderablesData} renderablesHash={renderablesHash} />}
         </>
     )
 }

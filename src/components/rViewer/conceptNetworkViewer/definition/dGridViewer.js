@@ -7,13 +7,13 @@ function DGridViewer({renderablesData, renderablesHash}) {
     const [currHash, setHash] = React.useState('');
     const [isVisualizationEnabled, setVisualization] = React.useState(true);
     const [rootDomain, setRootDomain] = React.useState(renderablesData?.DGrid.RootDomains[0]);
-    const visualizationClass = (isVisualizationEnabled)?"tab-selected stacked":"stacked";
+    const visualizationClass = (isVisualizationEnabled)?"tab-selected":"";
     const sidePanel = <div id="dgrid-side-panel">
         <button className={visualizationClass} onClick={_=>setVisualization(true)}>Visualization</button>
         {
           renderablesData?.DGrid.RootDomains.map(
             item => {
-              const className = !isVisualizationEnabled && rootDomain.Href === item.Href ? "tab-selected stacked" : 'stacked'
+              const className = !isVisualizationEnabled && rootDomain.Href === item.Href ? "tab-selected" : ''
               return <button key={item.Href} className={className} onClick={_=>{
                 setRootDomain(item)
                 setVisualization(false)

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
+import './pGridViewer.css'
 
 class PGridViewer extends React.Component {
   constructor(props) {
@@ -104,33 +105,10 @@ class PGridViewer extends React.Component {
     if (!this.state.grid) {
       return null;
     }
-    return ( <
-      ReactDataSheet data = {
-        this.state.grid
-      }
-      valueRenderer = {
-        cell => cell.value
-      }
-      onCellsChanged = {
-        changes => {
-          const grid = this.state.grid.map(row => [...row]);
-          changes.forEach(({
-            cell,
-            row,
-            col,
-            value
-          }) => {
-            grid[row][col] = {
-              ...grid[row][col],
-              value
-            };
-          });
-          this.setState({
-            grid
-          });
-        }
-      }
-      />
+    return (
+      <div id='pgrid-main-panel'>
+        <ReactDataSheet data={this.state.grid} valueRenderer={cell => cell.value} />
+      </div> 
     );
   }
 }
