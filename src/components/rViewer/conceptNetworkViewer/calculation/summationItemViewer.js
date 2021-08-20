@@ -98,13 +98,13 @@ class SummationItemViewer extends React.Component {
                 const fRow = i - SummationItem.MaxDepth - 1;
                 const fCol = j - 2;
                 const fact = SummationItem.FactualQuadrant[fRow][fCol];
-                if (fact.Unlabelled.TextBlock && fact.Unlabelled.TextPreview) {
+                if (fact.Unlabelled.Core) {
                   row.push({
-                    value: fact.Unlabelled.TextPreview
+                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
                   });
                 } else {
                   row.push({
-                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                    value: fact.Unlabelled.CharData
                   });
                 }
             }

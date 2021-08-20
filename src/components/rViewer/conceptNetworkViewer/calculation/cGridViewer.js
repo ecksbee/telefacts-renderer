@@ -9,7 +9,7 @@ function CGridViewer({renderablesData, renderablesHash}) {
         {
           renderablesData?.CGrid.SummationItems.map(
             item => {
-                const className = summationItem.Href === item.Href ? "tab-selected" : ''
+                const className = summationItem?.Href === item.Href ? "tab-selected" : ''
                 return <button key={item.Href} className={className} onClick={_=>{
                     setSummationItem(item)
                 }}>{item.Label.Default.Unlabelled}</button>
