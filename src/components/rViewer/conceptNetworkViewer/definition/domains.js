@@ -56,7 +56,6 @@ class DGridDomains extends React.Component {
                     value: `${RootDomain.Label.Default.Unlabelled}`
                 });
             } else {
-                console.log(RootDomain.PrimaryItems.length)
                 const pi = RootDomain.PrimaryItems[i - 1]
                 row.push({
                     value: `${pi.Label.Default.Unlabelled}`
@@ -65,8 +64,9 @@ class DGridDomains extends React.Component {
             continue
           }
           const effectiveDomain = primaryItemData[index]
-          if (j < effectiveDomain?.length??0) {
-            const domain = effectiveDomain[j]
+          const jOffset = j - 1
+          if (jOffset < effectiveDomain?.length??0) {
+            const domain = effectiveDomain[jOffset]
             let mod = ''
             if (domain.IsDefault) {
                 if (domain.IsStrikethrough) {
