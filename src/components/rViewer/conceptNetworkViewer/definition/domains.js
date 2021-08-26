@@ -28,6 +28,7 @@ class DGridDomains extends React.Component {
     if (!effectiveDimension || !this.props.rootDomain) {
         return null
     }
+    const { lang, labelRole } = this.props
     const RootDomain = this.props.rootDomain
     const grid = [];
     const maxRow = RootDomain.PrimaryItems.length + 1;
@@ -52,14 +53,26 @@ class DGridDomains extends React.Component {
       for(let j = 0; j < maxCol; j++) {
           if (j === 0) {
             if (i === 0) {
-                row.push({
-                    value: `${RootDomain.Label.Default.Unlabelled}`
-                });
+                if (RootDomain.Label[labelRole]) {
+                    row.push({
+                      value: RootDomain.Label[labelRole][lang]??RootDomain.Label.Default.Unlabelled
+                    });
+                } else {
+                    row.push({
+                        value: RootDomain.Label.Default.Unlabelled
+                    });
+                }
             } else {
                 const pi = RootDomain.PrimaryItems[i - 1]
-                row.push({
-                    value: `${pi.Label.Default.Unlabelled}`
-                });
+                if (pi.Label[labelRole]) {
+                    row.push({
+                      value: pi.Label[labelRole][lang]??pi.Label.Default.Unlabelled
+                    });
+                } else {
+                    row.push({
+                        value: pi.Label.Default.Unlabelled
+                    });
+                }
             }
             continue
           }
@@ -79,8 +92,13 @@ class DGridDomains extends React.Component {
                     mod = 'negative:'
                 }
             }
+            let domainName = domain.Label.Default.Unlabelled
+            if (domain.Label[labelRole]) {
+                domainName = domain.Label[labelRole][lang]??domain.Label.Default.Unlabelled
+            }
+
             row.push({
-                value: `${mod}${domain.Label.Default.Unlabelled}`
+                value: `${mod}${domainName}`
             });
           } else {
             row.push({
@@ -115,7 +133,9 @@ class DGridDomains extends React.Component {
 }
 
 DGridDomains.propTypes = {
-  rootDomain: PropTypes.object
+  rootDomain: PropTypes.object,
+  lang: PropTypes.string,
+  labelRole: PropTypes.string
 };
 
 export default DGridDomains

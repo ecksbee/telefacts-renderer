@@ -5,31 +5,12 @@ import 'react-datasheet/lib/react-datasheet.css';
 import './pGridViewer.css'
 
 class PGridViewer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      grid: this.getPGrid(this.props.renderablesData?.PGrid)
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.renderablesData) {
-      return
-    }
-    if (prevProps && prevProps.renderablesData && this.props.renderablesData && (prevProps.renderablesData===this.props.renderablesData)) {
-      return
-    }
-
-    const PGrid = this.getPGrid(this.props.renderablesData.PGrid)
-    this.setState({
-      grid: PGrid
-    });
-  }
 
   getPGrid(PGrid) {
     if (!PGrid) {
       return null
     }
+    const {lang, labelRole} = this.props
     const grid = [];
     const maxRow = PGrid.IndentedLabels.length + PGrid.MaxDepth + 1;
     const maxCol = PGrid.RelevantContexts.length + PGrid.MaxIndentation;
@@ -47,15 +28,22 @@ class PGridViewer extends React.Component {
             const rc = PGrid.RelevantContexts[index];
             if (i === 0) {
               row.push({
-                  value: rc.PeriodHeader.Unlabelled
+                  value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
               });
             }
             else {
               const dmIndex = i - 1;
               if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                row.push({
-                  value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
-                });
+                const em = rc.Dimensions[dmIndex].ExplicitMember
+                if (em.Label[labelRole]) {
+                  row.push({
+                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: em.Label.Default.Unlabelled
+                  });
+                }
               }
               else {
                 row.push({
@@ -71,9 +59,15 @@ class PGridViewer extends React.Component {
           const index = i - PGrid.MaxDepth - 1;
           const il = PGrid.IndentedLabels[index];
           if (il && j === il.Indentation) {
-            row.push({
-              value: il.Label.Default.Unlabelled
-            });
+            if (il.Label[labelRole]) {
+              row.push({
+                value: il.Label[labelRole][lang]??il.Label.Default.Unlabelled
+              });
+            } else {
+              row.push({
+                value: il.Label.Default.Unlabelled
+              });
+            }
           }
           else {
             if (j < PGrid.MaxIndentation) {
@@ -84,9 +78,15 @@ class PGridViewer extends React.Component {
             else {
               const fact = PGrid.FactualQuadrant[index][j - PGrid.MaxIndentation];
               if (fact.Unlabelled.Core) {
-                row.push({
-                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                });
+                if (fact[lang]) {
+                  row.push({
+                    value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
+                  });
+                } else {
+                  row.push({
+                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                  });
+                }
               } else {
                 row.push({
                   value: fact.Unlabelled.CharData
@@ -102,19 +102,22 @@ class PGridViewer extends React.Component {
   }
 
   render() {
-    if (!this.state.grid) {
+    const grid = this.getPGrid(this.props.renderablesData?.PGrid)
+    if (!grid) {
       return null;
     }
     return (
       <div id='pgrid-main-panel'>
-        <ReactDataSheet data={this.state.grid} valueRenderer={cell => cell.value} />
+        <ReactDataSheet data={grid} valueRenderer={cell => cell.value} />
       </div> 
     );
   }
 }
 
 PGridViewer.propTypes = {
-  renderablesData: PropTypes.object
+  renderablesData: PropTypes.object,
+  lang: PropTypes.string,
+  labelRole: PropTypes.string
 };
 
 export default PGridViewer
