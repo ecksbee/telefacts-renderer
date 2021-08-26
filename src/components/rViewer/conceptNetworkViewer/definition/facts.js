@@ -4,31 +4,12 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 
 class DGridFacts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      grid: this.getRootDomain(this.props.rootDomain)
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.rootDomain) {
-      return
-    }
-    if (prevProps && prevProps.rootDomain && this.props.rootDomain && (prevProps.rootDomain===this.props.rootDomain)) {
-      return
-    }
-
-    const RootDomain = this.getRootDomain(this.props.rootDomain)
-    this.setState({
-      grid: RootDomain
-    });
-  }
 
   getRootDomain(RootDomain) {
     if (!RootDomain) {
       return null
     }
+    const { lang, labelRole } = this.props
     const grid = [];
     const maxRow = RootDomain.PrimaryItems.length + RootDomain.MaxDepth + 2;
     const maxCol = RootDomain.RelevantContexts.length + RootDomain.MaxLevel + 1;
@@ -46,15 +27,22 @@ class DGridFacts extends React.Component {
             const rc = RootDomain.RelevantContexts[index - 1];
             if (i === 0) {
               row.push({
-                  value: rc.PeriodHeader.Unlabelled
+                value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
               });
             }
             else {
               const dmIndex = i - 1;
               if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                row.push({
-                  value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
-                });
+                const em = rc.Dimensions[dmIndex].ExplicitMember
+                if (em.Label[labelRole]) {
+                  row.push({
+                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: em.Label.Default.Unlabelled
+                  });
+                }
               }
               else {
                 row.push({
@@ -69,9 +57,15 @@ class DGridFacts extends React.Component {
         for(let j = 0; j < maxCol; j++) {
           if (j === 0) {
             if (i === RootDomain.MaxDepth + 1) {
-              row.push({
-                value: RootDomain.Label.Default.Unlabelled
-              });
+              if (RootDomain.Label[labelRole]) {
+                  row.push({
+                    value: RootDomain.Label[labelRole][lang]??RootDomain.Label.Default.Unlabelled
+                  });
+              } else {
+                  row.push({
+                      value: RootDomain.Label.Default.Unlabelled
+                  });
+              }
             } else {
               row.push({
                 value: ""
@@ -90,9 +84,15 @@ class DGridFacts extends React.Component {
                 const fCol = j - RootDomain.MaxLevel - 1;
                 const fact = RootDomain.FactualQuadrant[fRow][fCol];
                 if (fact.Unlabelled.Core) {
-                  row.push({
-                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                  });
+                  if (fact[lang]) {
+                    row.push({
+                      value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
+                    });
+                  } else {
+                    row.push({
+                      value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                    });
+                  }
                 } else {
                   row.push({
                     value: fact.Unlabelled.CharData
@@ -136,42 +136,18 @@ class DGridFacts extends React.Component {
   }
 
   render() {
-    if (!this.state.grid) {
+    const grid = this.getRootDomain(this.props.rootDomain)
+    if (!grid) {
       return null;
     }
-    return ( <
-      ReactDataSheet data = {
-        this.state.grid
-      }
-      valueRenderer = {
-        cell => cell.value
-      }
-      onCellsChanged = {
-        changes => {
-          const grid = this.state.grid.map(row => [...row]);
-          changes.forEach(({
-            cell,
-            row,
-            col,
-            value
-          }) => {
-            grid[row][col] = {
-              ...grid[row][col],
-              value
-            };
-          });
-          this.setState({
-            grid
-          });
-        }
-      }
-      />
-    );
+    return ( <ReactDataSheet data = {grid} valueRenderer = { cell => cell.value }/> );
   }
 }
 
 DGridFacts.propTypes = {
-  rootDomain: PropTypes.object
+  rootDomain: PropTypes.object,
+  lang: PropTypes.string,
+  labelRole: PropTypes.string
 };
 
 export default DGridFacts

@@ -4,31 +4,12 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 
 class SummationItemViewer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      grid: this.getSummationItem(this.props.summationItem)
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.summationItem) {
-      return
-    }
-    if (prevProps && prevProps.summationItem && this.props.summationItem && (prevProps.summationItem===this.props.summationItem)) {
-      return
-    }
-
-    const SummationItem = this.getSummationItem(this.props.summationItem)
-    this.setState({
-      grid: SummationItem
-    });
-  }
 
   getSummationItem(SummationItem) {
     if (!SummationItem) {
       return null
     }
+    const { lang, labelRole } = this.props
     const grid = [];
     const maxRow = SummationItem.ContributingConcepts.length + SummationItem.MaxDepth + 2;
     const maxCol = SummationItem.RelevantContexts.length + 2;
@@ -49,15 +30,22 @@ class SummationItemViewer extends React.Component {
             const rc = SummationItem.RelevantContexts[index];
             if (i === 0) {
               row.push({
-                  value: rc.PeriodHeader.Unlabelled
+                  value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
               });
             }
             else {
               const dmIndex = i - 1;
               if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                row.push({
-                  value: rc.Dimensions[dmIndex].ExplicitMember.Label.Default.Unlabelled
-                });
+                const em = rc.Dimensions[dmIndex].ExplicitMember
+                if (em.Label[labelRole]) {
+                  row.push({
+                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: em.Label.Default.Unlabelled
+                  });
+                }
               }
               else {
                 row.push({
@@ -86,22 +74,40 @@ class SummationItemViewer extends React.Component {
                 }
             } else if (j === 1) {
                 if (cRow === SummationItem.ContributingConcepts.length) {
-                    row.push({
+                    if (SummationItem.Label[labelRole]) {
+                      row.push({
+                        value: SummationItem.Label[labelRole][lang]??SummationItem.Label.Default.Unlabelled
+                      });
+                    } else {
+                      row.push({
                         value: SummationItem.Label.Default.Unlabelled
-                    });
+                      });
+                    }
                 } else {
-                    row.push({
+                    if (citem.Label[labelRole]) {
+                      row.push({
+                        value: citem.Label[labelRole][lang]??citem.Label.Default.Unlabelled
+                      });
+                    } else {
+                      row.push({
                         value: citem.Label.Default.Unlabelled
-                    });
+                      });
+                    }
                 }
             } else {
                 const fRow = i - SummationItem.MaxDepth - 1;
                 const fCol = j - 2;
                 const fact = SummationItem.FactualQuadrant[fRow][fCol];
                 if (fact.Unlabelled.Core) {
-                  row.push({
-                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                  });
+                  if (fact[lang]) {
+                    row.push({
+                      value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
+                    });
+                  } else {
+                    row.push({
+                      value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                    });
+                  }
                 } else {
                   row.push({
                     value: fact.Unlabelled.CharData
@@ -116,15 +122,18 @@ class SummationItemViewer extends React.Component {
   }
 
   render() {
-    if (!this.state.grid) {
+    const grid = this.getSummationItem(this.props.summationItem)
+    if (!grid) {
       return null;
     }
-    return ( <ReactDataSheet data = {this.state.grid} valueRenderer = {cell => cell.value}/> );
+    return ( <ReactDataSheet data = {grid} valueRenderer = {cell => cell.value}/> );
   }
 }
 
 SummationItemViewer.propTypes = {
-  summationItem: PropTypes.object
+  summationItem: PropTypes.object,
+  lang: PropTypes.string,
+  labelRole: PropTypes.string
 };
 
 export default SummationItemViewer

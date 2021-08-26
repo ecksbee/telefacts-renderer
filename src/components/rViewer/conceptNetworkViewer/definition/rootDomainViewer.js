@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FactViewer from './facts';
 import DGridDomains from './domains';
 
-function RootDomainViewer({rootDomain}) {
+function RootDomainViewer({rootDomain, lang, labelRole}) {
     const [isViewingFacts, setFactViewer] = React.useState(true);
     const controls = <div>
         <div>
@@ -15,14 +15,16 @@ function RootDomainViewer({rootDomain}) {
     return (
       <div>
           {controls}
-          {isViewingFacts && <FactViewer rootDomain={rootDomain} />}
-          {!isViewingFacts && <DGridDomains rootDomain={rootDomain} />}
+          {isViewingFacts && <FactViewer rootDomain={rootDomain} lang={lang} labelRole={labelRole} />}
+          {!isViewingFacts && <DGridDomains rootDomain={rootDomain} lang={lang} labelRole={labelRole} />}
       </div>
     );
 }
 
 RootDomainViewer.propTypes = {
-    rootDomain: PropTypes.object
+    rootDomain: PropTypes.object,
+    lang: PropTypes.string,
+    labelRole: PropTypes.string
 };
 
 export default RootDomainViewer;
