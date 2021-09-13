@@ -11,46 +11,73 @@ class SummationItemViewer extends React.Component {
     }
     const { lang, labelRole } = this.props
     const grid = [];
-    const maxRow = SummationItem.ContributingConcepts.length + SummationItem.MaxDepth + 2;
-    const maxCol = SummationItem.RelevantContexts.length + 2;
+    const maxRow = SummationItem.ContributingConcepts.length + SummationItem.ContextualMemberGrid.length + 2;
+    const maxCol = SummationItem.PeriodHeaders.length + 2;
     for(let i = 0; i < maxRow; i++) {
       const row = [];
-      if (i < SummationItem.MaxDepth + 1) {
+      if (i < SummationItem.ContextualMemberGrid.length + 1) {
         for(let j = 0; j < maxCol; j++) {
           if (j === 0) {
             row.push({
               value: ""
             });
           } else if (j === 1) {
-            row.push({
-              value: ""
-            });
-          } else {
-            const index = j - 2;
-            const rc = SummationItem.RelevantContexts[index];
-            if (i === 0) {
+            if (i == 0) {
               row.push({
-                  value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
+                value: ""
               });
-            }
-            else {
-              const dmIndex = i - 1;
-              if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                const em = rc.Dimensions[dmIndex].ExplicitMember
-                if (em.Label[labelRole]) {
+            } else {
+              const voidCell = SummationItem.VoidQuadrant[i - 1]
+              if (voidCell.TypedDomain) {
+                if (voidCell.TypedDomain.Label[labelRole]) {
                   row.push({
-                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label[labelRole][lang]??voidCell.TypedDomain.Label.Default.Unlabelled
                   });
                 } else {
                   row.push({
-                    value: em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                if (voidCell.Dimension.Label[labelRole]) {
+                  row.push({
+                    value: voidCell.Dimension.Label[labelRole][lang]??voidCell.Dimension.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: voidCell.Dimension.Label.Default.Unlabelled
                   });
                 }
               }
-              else {
+            }
+          } else {
+            const index = j - 2;
+            const ph = SummationItem.PeriodHeaders[index];
+            if (i === 0) {
+              row.push({
+                  value: ph[lang] ?? ph.Unlabelled
+              });
+            }
+            else {
+              const memberCell = SummationItem.ContextualMemberGrid[i - 1][j - 2]
+              if (memberCell.TypedMember) {
                 row.push({
-                  value: ""
-                })
+                  value: memberCell.TypedMember
+                });
+              } else if (memberCell.ExplicitMember) {
+                if (memberCell.ExplicitMember.Label[labelRole]) {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label[labelRole][lang]??memberCell.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                row.push({
+                  value: ''
+                });
               }
             }
           }
@@ -58,7 +85,7 @@ class SummationItemViewer extends React.Component {
       }
       else {
         for(let j = 0; j < maxCol; j++) {
-            const cRow = i - SummationItem.MaxDepth - 1;
+            const cRow = i - SummationItem.ContextualMemberGrid.length - 1;
             const citem = cRow === SummationItem.ContributingConcepts.length? 
                 SummationItem :
                 SummationItem.ContributingConcepts[cRow];
@@ -95,7 +122,7 @@ class SummationItemViewer extends React.Component {
                     }
                 }
             } else {
-                const fRow = i - SummationItem.MaxDepth - 1;
+                const fRow = i - SummationItem.ContextualMemberGrid.length - 1;
                 const fCol = j - 2;
                 const fact = SummationItem.FactualQuadrant[fRow][fCol];
                 if (fact.Unlabelled.Core) {
