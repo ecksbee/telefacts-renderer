@@ -11,121 +11,102 @@ class DGridFacts extends React.Component {
     }
     const { lang, labelRole } = this.props
     const grid = [];
-    const maxRow = RootDomain.PrimaryItems.length + RootDomain.MaxDepth + 2;
-    const maxCol = RootDomain.RelevantContexts.length + RootDomain.MaxLevel + 1;
+    const maxRow = RootDomain.PrimaryItems.length + RootDomain.ContextualMemberGrid.length + 1;
+    const maxCol = RootDomain.PeriodHeaders.length + 1;
     for(let i = 0; i < maxRow; i++) {
       const row = [];
-      if (i < RootDomain.MaxDepth + 1) {
+      if (i < RootDomain.ContextualMemberGrid.length + 1) {
         for(let j = 0; j < maxCol; j++) {
-          if (j < RootDomain.MaxLevel + 1) {
-            row.push({
-              value: ""
-            });
-          }
-          else {
-            const index = j - RootDomain.MaxLevel;
-            const rc = RootDomain.RelevantContexts[index - 1];
+          if (j === 0) {
             if (i === 0) {
               row.push({
-                value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
+                value: ""
               });
-            }
-            else {
-              const dmIndex = i - 1;
-              if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                const em = rc.Dimensions[dmIndex].ExplicitMember
-                if (em.Label[labelRole]) {
+            } else {
+              const voidCell = RootDomain.VoidQuadrant[i - 1]
+              if (voidCell.TypedDomain) {
+                if (voidCell.TypedDomain.Label[labelRole]) {
                   row.push({
-                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label[labelRole][lang]??voidCell.TypedDomain.Label.Default.Unlabelled
                   });
                 } else {
                   row.push({
-                    value: em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                if (voidCell.Dimension.Label[labelRole]) {
+                  row.push({
+                    value: voidCell.Dimension.Label[labelRole][lang]??voidCell.Dimension.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: voidCell.Dimension.Label.Default.Unlabelled
                   });
                 }
               }
-              else {
+            }
+          } else {
+            if (i === 0) {
+              const ph = RootDomain.PeriodHeaders[j - 1]
+              row.push({
+                  value: ph[lang] ?? ph.Unlabelled
+              });
+            }
+            else {
+              const memberCell = RootDomain.ContextualMemberGrid[i - 1][j - 1]
+              if (memberCell.TypedMember) {
                 row.push({
-                  value: ""
-                })
+                  value: memberCell.TypedMember
+                });
+              } else if (memberCell.ExplicitMember) {
+                if (memberCell.ExplicitMember.Label[labelRole]) {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label[labelRole][lang]??memberCell.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                row.push({
+                  value: ''
+                });
               }
             }
           }
         }
-      }
-      else {
-        for(let j = 0; j < maxCol; j++) {
+      } else {
+        const index = i - RootDomain.ContextualMemberGrid.length - 1;
+        for (let j = 0; j < maxCol; j++) {
           if (j === 0) {
-            if (i === RootDomain.MaxDepth + 1) {
-              if (RootDomain.Label[labelRole]) {
-                  row.push({
-                    value: RootDomain.Label[labelRole][lang]??RootDomain.Label.Default.Unlabelled
-                  });
+            const il = RootDomain.PrimaryItems[index];
+            if (il.Label[labelRole]) {
+              row.push({
+                value: il.Label[labelRole][lang]??il.Label.Default.Unlabelled
+              });
+            } else {
+              row.push({
+                value: il.Label.Default.Unlabelled
+              });
+            }
+          } else {
+            const fact = RootDomain.FactualQuadrant[index][j - 1];
+            if (fact.Unlabelled.Core) {
+              if (fact[lang]) {
+                row.push({
+                  value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
+                });
               } else {
-                  row.push({
-                      value: RootDomain.Label.Default.Unlabelled
-                  });
+                row.push({
+                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
+                });
               }
             } else {
               row.push({
-                value: ""
+                value: fact.Unlabelled.CharData
               });
-            }
-          }
-          else {            
-            if (i === RootDomain.MaxDepth + 1) {
-              if (j < RootDomain.MaxLevel + 1) {
-                row.push({
-                  value: ""
-                });
-              }
-              else {
-                const fRow = i - RootDomain.MaxDepth - 1;
-                const fCol = j - RootDomain.MaxLevel - 1;
-                const fact = RootDomain.FactualQuadrant[fRow][fCol];
-                if (fact.Unlabelled.Core) {
-                  if (fact[lang]) {
-                    row.push({
-                      value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
-                    });
-                  } else {
-                    row.push({
-                      value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                    });
-                  }
-                } else {
-                  row.push({
-                    value: fact.Unlabelled.CharData
-                  });
-                }
-              }
-            } else {
-              if (j < RootDomain.MaxLevel + 1) {
-                const pRow = i - RootDomain.MaxDepth - 2;
-                const pitem = RootDomain.PrimaryItems[pRow];
-                if (pitem.Level === j - 1) {
-                  row.push({
-                    value: pitem.Label.Default.Unlabelled
-                  });
-                } else {
-                  row.push({
-                    value: ""
-                  });
-                }
-              } else {
-                const fRow = i - RootDomain.MaxDepth - 1;
-                const fCol = j - RootDomain.MaxLevel - 1;
-                const fact = RootDomain.FactualQuadrant[fRow][fCol];
-                if (fact.Unlabelled.Core) {
-                  row.push({
-                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                  });
-                } else {
-                  row.push({
-                    value: fact.Unlabelled.CharData
-                  });
-                }
-              }
             }
           }
         }

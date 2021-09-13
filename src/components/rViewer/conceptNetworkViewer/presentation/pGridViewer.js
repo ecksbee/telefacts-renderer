@@ -12,53 +12,77 @@ class PGridViewer extends React.Component {
     }
     const {lang, labelRole} = this.props
     const grid = [];
-    const maxRow = PGrid.IndentedLabels.length + PGrid.MaxDepth + 1;
-    const maxCol = PGrid.RelevantContexts.length + PGrid.MaxIndentation;
+    const maxRow = PGrid.IndentedLabels.length + PGrid.ContextualMemberGrid.length + 1;
+    const maxCol = PGrid.PeriodHeaders.length + 1;
     for(let i = 0; i < maxRow; i++) {
       const row = [];
-      if (i < PGrid.MaxDepth + 1) {
+      if (i < PGrid.ContextualMemberGrid.length + 1) {
         for(let j = 0; j < maxCol; j++) {
-          if (j < PGrid.MaxIndentation) {
-            row.push({
-              value: ""
-            });
-          }
-          else {
-            const index = j - PGrid.MaxIndentation;
-            const rc = PGrid.RelevantContexts[index];
+          if (j === 0) {
             if (i === 0) {
               row.push({
-                  value: rc.PeriodHeader[lang] ?? rc.PeriodHeader.Unlabelled
+                value: ""
               });
-            }
-            else {
-              const dmIndex = i - 1;
-              if (rc.Dimensions.length && rc.Dimensions[dmIndex]) {
-                const em = rc.Dimensions[dmIndex].ExplicitMember
-                if (em.Label[labelRole]) {
+            } else {
+              const voidCell = PGrid.VoidQuadrant[i - 1]
+              if (voidCell.TypedDomain) {
+                if (voidCell.TypedDomain.Label[labelRole]) {
                   row.push({
-                    value: em.Label[labelRole][lang]??em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label[labelRole][lang]??voidCell.TypedDomain.Label.Default.Unlabelled
                   });
                 } else {
                   row.push({
-                    value: em.Label.Default.Unlabelled
+                    value: voidCell.TypedDomain.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                if (voidCell.Dimension.Label[labelRole]) {
+                  row.push({
+                    value: voidCell.Dimension.Label[labelRole][lang]??voidCell.Dimension.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: voidCell.Dimension.Label.Default.Unlabelled
                   });
                 }
               }
-              else {
+            }
+          } else {
+            if (i === 0) {
+              const ph = PGrid.PeriodHeaders[j - 1]
+              row.push({
+                  value: ph[lang] ?? ph.Unlabelled
+              });
+            }
+            else {
+              const memberCell = PGrid.ContextualMemberGrid[i - 1][j - 1]
+              if (memberCell.TypedMember) {
                 row.push({
-                  value: ""
-                })
+                  value: memberCell.TypedMember
+                });
+              } else if (memberCell.ExplicitMember) {
+                if (memberCell.ExplicitMember.Label[labelRole]) {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label[labelRole][lang]??memberCell.Label.Default.Unlabelled
+                  });
+                } else {
+                  row.push({
+                    value: memberCell.ExplicitMember.Label.Default.Unlabelled
+                  });
+                }
+              } else {
+                row.push({
+                  value: ''
+                });
               }
             }
           }
         }
-      }
-      else {
-        for(let j = 0; j < maxCol; j++) {
-          const index = i - PGrid.MaxDepth - 1;
-          const il = PGrid.IndentedLabels[index];
-          if (il && j === il.Indentation) {
+      } else {
+        const index = i - PGrid.ContextualMemberGrid.length - 1;
+        for (let j = 0; j < maxCol; j++) {
+          if (j === 0) {
+            const il = PGrid.IndentedLabels[index];
             if (il.Label[labelRole]) {
               row.push({
                 value: il.Label[labelRole][lang]??il.Label.Default.Unlabelled
@@ -68,30 +92,22 @@ class PGridViewer extends React.Component {
                 value: il.Label.Default.Unlabelled
               });
             }
-          }
-          else {
-            if (j < PGrid.MaxIndentation) {
-              row.push({
-                value: ""
-              });
-            }
-            else {
-              const fact = PGrid.FactualQuadrant[index][j - PGrid.MaxIndentation];
-              if (fact.Unlabelled.Core) {
-                if (fact[lang]) {
-                  row.push({
-                    value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
-                  });
-                } else {
-                  row.push({
-                    value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
-                  });
-                }
+          } else {
+            const fact = PGrid.FactualQuadrant[index][j - 1];
+            if (fact.Unlabelled.Core) {
+              if (fact[lang]) {
+                row.push({
+                  value: fact[lang].Head+fact[lang].Core+fact[lang].Tail
+                });
               } else {
                 row.push({
-                  value: fact.Unlabelled.CharData
+                  value: fact.Unlabelled.Head+fact.Unlabelled.Core+fact.Unlabelled.Tail
                 });
               }
+            } else {
+              row.push({
+                value: fact.Unlabelled.CharData
+              });
             }
           }
         }
