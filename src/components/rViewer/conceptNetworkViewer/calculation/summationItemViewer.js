@@ -22,7 +22,7 @@ class SummationItemViewer extends React.Component {
               value: ""
             });
           } else if (j === 1) {
-            if (i == 0) {
+            if (i === 0) {
               row.push({
                 value: ""
               });

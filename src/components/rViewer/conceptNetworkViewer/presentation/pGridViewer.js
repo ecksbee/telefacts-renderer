@@ -18,8 +18,8 @@ class PGridViewer extends React.Component {
       const row = [];
       if (i < PGrid.ContextualMemberGrid.length + 1) {
         for(let j = 0; j < maxCol; j++) {
-          if (j == 0) {
-            if (i == 0) {
+          if (j === 0) {
+            if (i === 0) {
               row.push({
                 value: ""
               });
@@ -81,7 +81,7 @@ class PGridViewer extends React.Component {
       } else {
         const index = i - PGrid.ContextualMemberGrid.length - 1;
         for (let j = 0; j < maxCol; j++) {
-          if (j == 0) {
+          if (j === 0) {
             const il = PGrid.IndentedLabels[index];
             if (il.Label[labelRole]) {
               row.push({

@@ -17,8 +17,8 @@ class DGridFacts extends React.Component {
       const row = [];
       if (i < RootDomain.ContextualMemberGrid.length + 1) {
         for(let j = 0; j < maxCol; j++) {
-          if (j == 0) {
-            if (i == 0) {
+          if (j === 0) {
+            if (i === 0) {
               row.push({
                 value: ""
               });
@@ -80,7 +80,7 @@ class DGridFacts extends React.Component {
       } else {
         const index = i - RootDomain.ContextualMemberGrid.length - 1;
         for (let j = 0; j < maxCol; j++) {
-          if (j == 0) {
+          if (j === 0) {
             const il = RootDomain.PrimaryItems[index];
             if (il.Label[labelRole]) {
               row.push({
